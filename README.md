@@ -210,3 +210,52 @@ DTO inspirado no Value Object:
 
 Normalmente, as classes DTO (Data Transfer Object) são usadas apenas para transportar dados e não possuem comportamento. No entanto, inspirado no conceito de Value Object (onde um objeto é definido pelos seus valores), o autor propõe que os DTOs possam conter comportamentos simples relacionados aos seus dados.
 Exemplo: em vez de simplesmente transportar dados de uma oferta, o DTO pode ter métodos para validar ou processar esses dados, como verificar se o número de parcelas é válido. O autor acredita que essa abordagem torna o código mais coeso e evita a necessidade de classes auxiliares para mapeamento, tornando o processo mais simples e direto.
+
+## Práticas de design de código para o seu dia a dia
+### Introdução
+2 tipos de conteúdos:
+  1. clean code de forma sistemática
+  2. direcionamentos (intenção) de código de qualidade
+
+### Direcionamento 1: Qualidade não é negociável
+Qualidade não é negociável. O código deve ser feito com o design proporcional a complexidade considerando os conhecimentos que temos no momento da produção.
+
+1. **Qualidade não é negociável**:  
+   - O código deve sempre refletir o melhor esforço possível, dentro das limitações e variáveis existentes.  
+   - Priorize práticas que garantam confiabilidade e clareza, mesmo em prazos apertados. A qualidade nunca deve ser sacrificada de forma deliberada.
+
+2. **Design proporcional à complexidade**:  
+   - O design deve ser simples e adequado à complexidade do problema, evitando abstrações ou generalizações desnecessárias.  
+   - Considere os conhecimentos disponíveis no momento para criar soluções específicas e eficientes, priorizando clareza e legibilidade.  
+
+### Direcionamento 2: Aceite, tomamos decisões ruins
+Você vai deixar decisões ruins pelo caminho, não importa o seu nível.
+
+### Direcionamento 3: Fazemos o que foi combinado
+A prioridade máxima é funcionar de acordo com o caso de uso.
+
+### Prática 1. - Parte 1: Implemente de de fora para dentro
+Execute o seu código o mais rápido possível. Priorize implementar de fora para dentro, dessa forma você visualiza o que realmente precisa e usa uma abordagem mais incremental. O "fora" aqui pode ser o endpoint que vai receber uma chamada, pode ser seu teste automatizado
+
+Por exemplo, criar o endpoint primeiro, depois implementar as entidade e serviços. Trazer um resultado de forma incremental e sempre testando as fucionalidades.
+
+### Prática 1. - Parte 2: Implemente de de fora para dentro
+Descreva os passos necessários para executar a tarefa antes da implementação do código.
+
+```java
+* Neste endpoint eu preciso receber a pessoa logada que gerará o convite e também o projeto daquele convite.
+    * A pessoa logada vai vir via header
+    * O projeto pode vir via parametro combinado na própria url (path variable)
+    * Também preciso receber os dados do convite: Email e dias de expiração
+* Carregar a pessoa logada e verificar se ela existe mesmo (use o getOrThrow e lance ResponseStatusException)
+* Carregar o projeto e verificar se ele existe mesmo (use o getOrThrow e lance ResponseStatusException)
+* A pessoa logada precisa ser dona do projeto (lance ResponseStatusException)
+* Eu crio o novo convite para aquele email com aquela data de expiração
+    * Crie um método chamado toModel na classe de request
+* Salvo este convite
+    * Utilize o EntityManager
+* Preciso mandar um email para a pessoa que vai receber o convite
+    * Deixe fake por enquanto
+```
+
+### Prática 1. - Parte 3: Implemente de de fora para dentro
