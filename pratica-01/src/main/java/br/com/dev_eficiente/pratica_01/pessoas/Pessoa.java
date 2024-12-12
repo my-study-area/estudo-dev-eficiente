@@ -1,6 +1,8 @@
 package br.com.dev_eficiente.pratica_01.pessoas;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "pessoas")
@@ -8,8 +10,10 @@ public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String nome;
-    private Integer idade;
+    @Min(value = 18)
+    private int idade;
 
     public Pessoa() {
     }
