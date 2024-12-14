@@ -1,8 +1,9 @@
 package br.com.dev_eficiente.pratica_01.contas;
 
+import br.com.dev_eficiente.pratica_01.pessoas.Pessoa;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "contas")
@@ -12,19 +13,22 @@ public class Conta {
     private Long id;
     @NotBlank
     private String login;
-    @NotBlank
-    @Email
-    private String  email;
+    @OneToOne
+    private Pessoa dona;
 
     public Conta() {
     }
 
-    public Conta(@NotBlank String login, @NotBlank @Email String email) {
+    public Conta(@NotBlank String login, @NotNull Pessoa dona) {
         this.login = login;
-        this.email = email;
+        this.dona = dona;
     }
 
     public Long getId() {
         return this.id;
+    }
+
+    public boolean pertenceAPessoa(Pessoa pessoaLogada) {
+        return pessoaLogada.equals(this.dona);
     }
 }
