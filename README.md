@@ -4,6 +4,9 @@ estudo-dev-eficiente
 Link: https://dev-eficiente.memberkit.com.br/
 Google doc: https://docs.google.com/document/d/18j3Z5PUNkN1zMayhOvj2wgp7v5u97hBHyEXxKv2HuuA/edit?tab=t.0
 
+Repositórios: https://github.com/asouza?tab=repositories
+
+
 # Jornada Dev Eficiente
 ## Bem vindo(a) à jornada Dev Eficiente
 ### Bem vindo(a) à jornada!
@@ -243,13 +246,13 @@ Por exemplo, criar o endpoint primeiro, depois implementar as entidade e serviç
 Descreva os passos necessários para executar a tarefa antes da implementação do código.
 
 ```java
-* Neste endpoint eu preciso receber a pessoa logada que gerará o convite e também o projeto daquele convite.
+* Neste endpoint eu preciso receber a pessoa logada que gerará o convite e também a conta daquele convite.
     * A pessoa logada vai vir via header
-    * O projeto pode vir via parametro combinado na própria url (path variable)
+    * a conta pode vir via parametro combinado na própria url (path variable)
     * Também preciso receber os dados do convite: Email e dias de expiração
 * Carregar a pessoa logada e verificar se ela existe mesmo (use o getOrThrow e lance ResponseStatusException)
-* Carregar o projeto e verificar se ele existe mesmo (use o getOrThrow e lance ResponseStatusException)
-* A pessoa logada precisa ser dona do projeto (lance ResponseStatusException)
+* Carregar a conta e verificar se ele existe mesmo (use o getOrThrow e lance ResponseStatusException)
+* A pessoa logada precisa ser dona da conta (lance ResponseStatusException)
 * Eu crio o novo convite para aquele email com aquela data de expiração
     * Crie um método chamado toModel na classe de request
 * Salvo este convite
@@ -259,3 +262,164 @@ Descreva os passos necessários para executar a tarefa antes da implementação 
 ```
 
 ### Prática 1. - Parte 3: Implemente de de fora para dentro
+- termos o passo a passo de implementação desejada
+- No lugar de inicar o desenvolvimento das classes pelas entidades e repositórios, iniciar pelo controller e ir avançando passo a passo. Você define o nível de granularidade.
+- Maximizar as chances de ikdentificar os problema com mais antecedência.
+- Testar granularmente ajuda a identificar os problemas com mais facilidade.
+
+**Resumo - Implementação "De Fora Para Dentro"**
+
+1. **Definição**: A prática "de fora para dentro" consiste em implementar funcionalidades começando pelo comportamento externo, validando cada parte progressivamente.  
+2. **Testes Incrementais**: Após cada etapa implementada, testar funcionalidades pequenas para localizar problemas rapidamente.  
+3. **Granularidade**: Dividir a execução em passos menores e iterar sobre eles, garantindo que cada um funcione antes de seguir.  
+4. **Validação Contínua**: Confirmar a correta passagem de parâmetros, headers e dados da requisição, verificando se o comportamento está alinhado.  
+5. **Refinamento**: Ajustar e corrigir cada parte à medida que o processo avança, evitando retrabalho maior no final.  
+6. **Origem do Problema**: Atuar próximo à origem das falhas facilita a resolução e mantém o processo mais ágil e preciso.  
+
+### Prática 2: Maximize a coesão
+- Deixar o comportamento próximo do estado. O comportamento é o método e o estado são as classes com as propriedades de um domínio de informação (entidade).
+- Como decidir quando realizar ou não? R: está realizando uma lógica baseada no estado
+
+**Princípios Fundamentais**
+
+1. Encapsular Comportamentos Próximos ao Estado
+  - Evite implementar lógica fora da entidade que contém o estado.
+  - Promova a responsabilidade dentro da classe que contém os atributos.
+2. Evitar Código Anêmico
+  - Use entidades ricas (Rich Domain Models) para encapsular lógica relacionada ao domínio.
+  - Deixe comportamentos relevantes no modelo, ao invés de espalhá-los por controladores ou serviços.
+
+Exemplo 1:
+```java
+//RUIM
+if (conta.getProprietario().equals(usuarioLogado)) {
+    // lógica de sucesso
+} else {
+    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+}
+
+//BOM
+public class Conta {
+    private Usuario proprietario;
+
+    public boolean pertenceAoUsuario(Usuario usuario) {
+        return this.proprietario.equals(usuario);
+    }
+}
+```
+
+Exemplo 2:
+```java
+//RUIM
+Convite convite = new Convite(request.getEmail(), request.getDiasParaExpirar());
+
+//BOM
+public class ConviteRequest {
+    private String email;
+    private int diasParaExpirar;
+
+    public Convite toConvite() {
+        return new Convite(this.email, this.diasParaExpirar);
+    }
+}
+```
+
+Exemplo de **code Smells**:
+```java
+//RUIM
+if (conta.getProprietario().getEmail().equals(usuario.getEmail())) { ... }
+```
+
+### Prática 3: Proteja as bordas do sistema
+- Proteja as bordas do sistema, iniciando pela camada mais externa
+- Evita que dados invalidos percorram pelo sistema
+
+### Prática 4: Não retorne nulo
+- **Problema com retorno nulo:** Retornar nulo em métodos quebra a confiança no código e pode causar erros como NullPointerException.  
+- **Garantir retorno:** Métodos devem sempre retornar um valor válido ou usar abstrações (ex.: `Optional` no Java) para indicar ausência de valor.  
+- **Exemplo prático:** O uso de métodos como `findById` no Spring Data JPA, que retorna um `Optional`, ajuda a tratar situações em que o valor pode estar ausente.  
+- **Alternativa segura:** Caso o retorno não possa ser garantido, lançar exceções ou usar abstrações para sinalizar ausência é mais adequado.  
+- **Benefício geral:** A abordagem melhora a clareza, previne erros e mantém a consistência no código.
+
+Exmeplo:
+```java
+Pessoa pessoaLogada = pessoaRepository.findById(IdPessoaLogada)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+Conta conta = contaRepository.findById(idConta)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+```
+
+### Prática 5: Não ligamos parâmetros de borda externa com entidades
+-Evitar o uso de classes de entidades na borda expondo propriedades que não devem estar expostas ao usuários. 
+- Use DTO somente com os dados necessários
+- Evite criar método de mapeamento nas entidades, eles tedem a crecer em quantidade. Utileze métodos específicos no DTO.
+
+### Prática 6: Informação obrigatória entra pelo construtor
+- Usar construtor para criar um objeto válido e obrigatórios
+- Utilizar setters para atualizar valores pode aumentar o acomplamento mental e permite a criação de um objeto sem os valores obrigatórios
+
+### Prática 7: Deixe pistas quando a compilação não resolver
+- Utilize anotações nos arâmetros dos métodos para guiar a pessoa que irá utilizar o método. Esas anotações não disparam erros, mas direcionam o usuário otipo de valor esperado.
+- [Precise_Documentation_The_Key_To_Better](./materiais/Precise_Documentation_The_Key_To_Better.pdf)
+
+### Prática 8: Utilize o que está pronto
+- Usamos tudo que conhecemos que está pronto.
+Antes:
+```java
+public class Convite {
+    
+    public Convite(Conta conta, @Email @NotBlank String email, @Future LocalDate dataExpiracao) {
+
+        if(conta == null) {
+            throw new IllegalArgumentException("A conta não pode ser nula");
+        }
+    
+        if(email == null || email.trim().equals("")) {
+           throw new IllegalArgumentException("O email precisa estar preenchido");
+        }
+
+        if(dataExpiracao.compareTo(LocalDate.now()) <= 0) {
+            throw new IllegalArgumentException("A data de expiracao do convite tem que ser no futuro");
+        }
+    }
+}
+```
+Depois:
+```java
+public class Convite {
+    private LocalDate dataExpiracao;
+
+    public Convite(Conta conta, @Email @NotBlank String email, @Future LocalDate dataExpiracao) {
+        Assert.notNull(conta, message: "A conta não pode ser nula");
+        Assert.hasText(email, message: "O email precisa estar preenchido");
+        Assert.isTrue(expression: dataExpiracao.compareTo(LocalDate.now()) <= 0, message: "A data de expiração deve ser no futuro");
+
+
+        this.conta = conta;
+        this.email = email;
+        this.dataExpiracao = dataExpiracao;
+    }
+}
+```
+
+### Prática 9: Utilize o CDD
+Foi utilizado como guideline:
+```java
+/**
+ * - acoplamento com classes especificas do projeto - 1 ICP
+ * - condicionais - 1 ICP
+ * - blocos extras de código - 1 ICP
+ */
+```
+
+### Prática 10: Só alteramos referências que criamos
+- só alterar estados de objetos que criamos em nossas classes.
+- objetos criados externamente devem ser alterados em sua classe de origem.
+
+### Prática 11: Derive testes de maneira sistemática
+- cobrir os casos essenciais iniciamente, cobrindo os caminhos e branchs de decisão
+- somente depois partir para outras aboragens
+
+## Usando carga cognitiva pra diminuir a complexidade do código (Cognitive-Driven Development)
+### Introdução oficial ao CDD
+
