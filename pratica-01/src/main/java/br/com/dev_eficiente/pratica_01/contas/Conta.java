@@ -31,4 +31,13 @@ public class Conta {
     public boolean pertenceAPessoa(Pessoa pessoaLogada) {
         return pessoaLogada.equals(this.dona);
     }
+
+    @Override
+    public String toString() {
+        return "Conta{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", dona=" + dona +
+                '}';
+    }
 }

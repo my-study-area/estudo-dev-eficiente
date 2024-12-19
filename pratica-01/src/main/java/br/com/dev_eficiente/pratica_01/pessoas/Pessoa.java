@@ -52,4 +52,14 @@ public class Pessoa {
     public int hashCode() {
         return Objects.hashCode(email);
     }
+
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", idade=" + idade +
+                '}';
+    }
 }
