@@ -422,4 +422,69 @@ Foi utilizado como guideline:
 
 ## Usando carga cognitiva pra diminuir a complexidade do código (Cognitive-Driven Development)
 ### Introdução oficial ao CDD
+https://github.com/asouza/pilares-design-codigo/blob/master/ICSME-2020-cognitive-driven-development.pdf
+
+https://drive.google.com/file/d/1jJjf3JL-IXBEKVEVXKp0E9tlhKW2f2mC/view
+
+[Link do ebook local](./materiais/praticas-de-codigo-para-devs-eficientes.pdf)
+
+### Um exemplo real sobre complexidade em um projeto open source
+- analise do código do [Feign](https://github.com/OpenFeign/feign)
+
+### Analisando o incremento de complexidade de modo visual
+- Projeto para analisar a complexidade de uma classe a partir de vários commits: [complexity-tracker Public](https://github.com/asouza/complexity-tracker)
+
+### Experimento CDD x Convencional
+- comparação entre as técnicas CDD e convencionais
+- [youtube.com/watch?v=VqqIqA8cwCw](youtube.com/watch?v=VqqIqA8cwCw)
+- https://arxiv.org/pdf/2206.10655
+
+### Métrica derivada do CDD sugerida na jornada
+- explicação do guideline para o CDD
+- aplicação do CDD com solução
+
+### Derivando métricas do CDD para outros cenários
+```
+/**
+ *
+ *  * metrica alberto do cdd
+ *  * 1 ponto - acoplamento contextual
+ *  * 1 ponto - branch
+ *  * 1 ponto - funcao como argumento
+ *
+ *  * limite 7 classes com atributos de dependencia
+ *  * limite 9 classes com atributos de estado
+ *
+ *
+ *
+ *  * metrica padrao industria do cdd
+ *
+ *  * 1 ponto - qualquer acoplamento
+ *  * 1 ponto - branch
+ *  * 1 funcao - como argumento
+ *
+ *  * limite 7 classes com atributos de dependencia
+ *  * limite 9 classes com atributos de estado *
+ **/
+```
+
+### CDD aplicado para cenários de código legado
+- Em classe com uma grande quantidade de pontos de complexidade, tente diminuir em porcentagem. POr exemplo, dimnuir para 90%, depois 80% e etc.
+
+### Design escalável e sustentável
+- utilizar a técnica para tornar o código manutenível
+
+### A relação do CDD com tudo que você já conhece
+- SOLID, Clean Code e inspirações arquiteturais como MVC, Clean Architecture e Arquitetura Hexagonal podem continuar sendo utilizadas, caso você ache necessário. As métricas derivadas do CDD limitam a complexidade, não impõem uma forma de programar. 
+
+### Como derivar métricas com CDD
+- definir as unidades de itens
+- identificar os ponto de complexidades (if, switch, implementação de interfaces, etc)
+- votar cadas unidades e selecionar alguns através de votação.
+
+### Duas formas diferentes de tentar resolver o mesmo desafio
+Enquanto as práticas inspiradas no SOLID, Clean Code, Domain Driven Design etc tentam acomodar mudar mudanças de tecnologia e se antecipar para possíveis mudanças de escopo, o CDD abraça a mudança de escopo e de pessoas. 
+
+Na opinião de Alberto o que mais muda num projeto, principalmente da indústria, é o escopo e as pessoas. Então a aposta é que um código mais fácil de entender vai ser mais fácil de manter e evoluir. A flexibilidade do código vai ser simplesmente uma resposta a especificação. Dado que, no fim, um código é uma automação do desejo de alguém :). 
+
 
