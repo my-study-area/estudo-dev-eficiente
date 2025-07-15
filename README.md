@@ -28,7 +28,7 @@ Repositórios: https://github.com/asouza?tab=repositories
 
 ### Curso: Práticas de design de código para o seu dia a dia
 - [Práticas de design de código para o seu dia a dia](./praticas-design-codigo-dia-dia.md)
-- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/QzWv01)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/xgOwnO)
 
 ### Curso: Cognitive Driven Development (CDD): Controle o Impacto Cognitivo do Seu Código de forma Sistemática
 - [Cognitive Driven Development (CDD): Controle o Impacto Cognitivo do Seu Código de forma Sistemática](./cognitive-driven-development-cdd.md)
@@ -45,6 +45,10 @@ Repositórios: https://github.com/asouza?tab=repositories
 ### Curso: Máquina de Aprender
 - [Máquina de Aprender](./maquina-aprender.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/xODVWd)
+
+### Curso: Engenharia de Requisitos para Devs
+- [Engenharia de Requisitos para Devs](./engenharia-requisitos-devs.md)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/Q7EwNA)
 
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
