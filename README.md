@@ -50,6 +50,10 @@ Repositórios: https://github.com/asouza?tab=repositories
 - [Engenharia de Requisitos para Devs](./engenharia-requisitos-devs.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/Q7EwNA)
 
+### Curso: Desenvolvimento Seguro de Software
+- [Engenharia de Requisitos para Devs](./desenvolvimento-seguro-software.md)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/beoReo)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
