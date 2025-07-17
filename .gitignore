@@ -1,2 +1,3 @@
-pratica-01/.idea
-pratica-01/target
+*/**/.idea
+*/**/target
+

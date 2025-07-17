@@ -13,6 +13,17 @@ public class Treinamento {
 		this.titulo = titulo;
 	}
 
+	public void adicionarAtividade(String tituloAtividade) {
+		titulosAtividades.add(tituloAtividade);
+	}
+
+	public int getPosicao(String tituloAtividade) {
+		if (!titulosAtividades.contains(tituloAtividade)) {
+			throw new IllegalArgumentException("Titulo não encontrado");
+		}
+		return titulosAtividades.indexOf(tituloAtividade);
+	}
+
 	public static void main(String[] args) {
 		Treinamento testeDeFogo = new Treinamento("teste de fogo para você");
 		
@@ -21,10 +32,19 @@ public class Treinamento {
 		 * dentro do treinamento. Como você faria? 
 		 */
 
+		testeDeFogo.adicionarAtividade("atividade 01");
+		testeDeFogo.adicionarAtividade("atividade 02");
+		testeDeFogo.adicionarAtividade("atividade 03");
+
 		/*
 		 * Uma vez que você implementou a adição de titulos de atividades,
 		 * é necessário que você possibilite a descoberta da posicao do titulo
 		 * da atividade dentro do treinamento. 
 		 */
+
+		int posicao = testeDeFogo.getPosicao("atividade 01");
+
+		System.out.println("Posição da atividade é " + posicao);
 	}
+
 }
