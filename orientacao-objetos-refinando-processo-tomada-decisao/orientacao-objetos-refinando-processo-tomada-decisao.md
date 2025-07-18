@@ -254,3 +254,11 @@ Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/1734
 Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-validacao-estado-pais/src/main/java/com/deveficiente/heuristicas/coesaobasica/validarequest/v1/ValidaSeEstadoPertenceAPais.java
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-validacao-estado-pais/src/main/java/com/deveficiente/heuristicas/coesaobasica/validarequest/v2/ValidaSeEstadoPertenceAPais.java
+
+
+## Heurística #2 Quando o tipo padrão não é mais suficiente: Explicação e primeiro exemplo
+Retornos de tipos padrão, como por exemplo, String, Long e outros podem não ser suficientes em alguns casos.
+
+Alguns exemplos de texto como um **e-mail** ou **link** que são representados como String em alguns casos, possuem algumas Características adicionais e que diferem de sua característica original. No caso de **String**, é um conjunto de caracteres, por exemplo, já um email possui as caracteristicas similares a um texto, mas também possui um padrão de caracteres que o diferencia de uma **String** comum como o uso de `@` e os outros elementos. É este conceito que é abordado nesta heurística.
+
+A aula faz referência quanto ao uso de Factory Methods falado no LIvro Java Efetivo para facilitar a criação de um objeto. Item 1 trata especificamente sobre o uso de métodos estáticos de fábrica em vez de construtores.
