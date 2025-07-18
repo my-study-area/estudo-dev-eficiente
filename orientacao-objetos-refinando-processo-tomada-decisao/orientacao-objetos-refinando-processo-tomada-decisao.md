@@ -133,8 +133,35 @@ public int executa(@PathVariable("id") Long id) {
 Fonte: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/0e42c602ba0662f192c9657fdd5d5e485fdf99ea/src/main/java/com/deveficiente/heuristicas/coesaobasica/datas/v1/VerificaDiasParaPartidaController.java
 
 #### Outra explicação com verificação de nullidade
-https://www.youtube.com/watch?v=Rg8-LGD7x8Q&ab_channel=DevEficiente
+Conteúdo desta aula foi utilizado em dois momento no curso. Para evitar repetição, este conteúdo ficou centralizado em [Heurística #1 Coesão Básica: Mais um exemplo](#heurística-1-coesão-básica-mais-um-exemplo)
 
+
+### Descrição da atividade
+Neste primeiro vídeo Alberto explica o que ele quer dizer com esta heurística e também já demonstra uma situação onde existe uma oportunidade de aumentar a coesão do código. Além disso ele deixa o ponto de vista dele sobre os possíveis ganhos de aumentar a coesão do código.
+
+Agora, neste segundo vídeo Alberto traz outro exemplo onde existe uma oportunidade de aumentar a coesão do código.
+
+Antes de caminhar para os desafios, é sugerido que você pare e reflita sobre o que foi explicado no contexto do seu dia a dia de dev(a). Será que os códigos que você tem escrito e visto estão tirando máximo proveito da coesão?
+
+Agora vamos para os desafios. Aqui temos dois desafios e a explicação de cada um pode ser vista nos vídeos a seguir:
+
+1.  [Explicação para o primeiro desafio](https://youtu.be/NXiTagrifEk)
+2.  [Explicação para o segundo desafio](https://youtu.be/T6LWAXSirH0)
+
+Após ter refletido e tentado implementar a solução, você pode(deve) conferir a sugestão de solução. Olhar a solução é importante para você ter a capacidade de avaliar o que você mesmo fez. Pode ser que sua solução seja melhor, pior, igual... Essa análise vai te dando cada vez mais clareza sobre os rumos do seu aprendizado.
+
+1.  [Sugestão de solução para o primeiro desafio](https://youtu.be/kp-YFWaC53k)
+  - Solução do autor: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
+
+
+2.  [Sugestão de solução para o segundo desafio](https://youtu.be/EUSmZpOSe3w)
+
+As branches com as sugestões de soluções podem ser acessadas seguindo os links abaixo
+
+1.  [Desafio relacionado a treinamento e atividades](https://github.com/asouza/desafios-heuristicas-deveficiente/tree/solucao-coesao-desafio-treinamento-e-atividades)
+2.  [Desafio relacionado a estados e países](https://github.com/asouza/desafios-heuristicas-deveficiente/tree/solucao-coesao-desafio-validacao-estado-pais)
+
+## Heurística #1 Coesão Básica: Mais um exemplo
 > Mesmo problema citado acima, comportamento longe do estado.
 
 Antes:
@@ -216,29 +243,3 @@ public void executa(BuscaRequestV2 request) {
 ```
 
 fonte: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/0e42c602ba0662f192c9657fdd5d5e485fdf99ea/src/main/java/com/deveficiente/heuristicas/coesaobasica/strings/v1/BuscaController.java
-
-
-### Descrição da atividade
-Neste primeiro vídeo Alberto explica o que ele quer dizer com esta heurística e também já demonstra uma situação onde existe uma oportunidade de aumentar a coesão do código. Além disso ele deixa o ponto de vista dele sobre os possíveis ganhos de aumentar a coesão do código.
-
-Agora, neste segundo vídeo Alberto traz outro exemplo onde existe uma oportunidade de aumentar a coesão do código.
-
-Antes de caminhar para os desafios, é sugerido que você pare e reflita sobre o que foi explicado no contexto do seu dia a dia de dev(a). Será que os códigos que você tem escrito e visto estão tirando máximo proveito da coesão?
-
-Agora vamos para os desafios. Aqui temos dois desafios e a explicação de cada um pode ser vista nos vídeos a seguir:
-
-1.  [Explicação para o primeiro desafio](https://youtu.be/NXiTagrifEk)
-2.  [Explicação para o segundo desafio](https://youtu.be/T6LWAXSirH0)
-
-Após ter refletido e tentado implementar a solução, você pode(deve) conferir a sugestão de solução. Olhar a solução é importante para você ter a capacidade de avaliar o que você mesmo fez. Pode ser que sua solução seja melhor, pior, igual... Essa análise vai te dando cada vez mais clareza sobre os rumos do seu aprendizado.
-
-1.  [Sugestão de solução para o primeiro desafio](https://youtu.be/kp-YFWaC53k)
-  - Solução do autor: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
-
-
-2.  [Sugestão de solução para o segundo desafio](https://youtu.be/EUSmZpOSe3w)
-
-As branches com as sugestões de soluções podem ser acessadas seguindo os links abaixo
-
-1.  [Desafio relacionado a treinamento e atividades](https://github.com/asouza/desafios-heuristicas-deveficiente/tree/solucao-coesao-desafio-treinamento-e-atividades)
-2.  [Desafio relacionado a estados e países](https://github.com/asouza/desafios-heuristicas-deveficiente/tree/solucao-coesao-desafio-validacao-estado-pais)
