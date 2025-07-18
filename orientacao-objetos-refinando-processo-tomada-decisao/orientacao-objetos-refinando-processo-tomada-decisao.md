@@ -248,3 +248,9 @@ fonte: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/0e42c602
 Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-treinamento-e-atividades/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v1/Treinamento.java
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
+
+
+## Heurística #1 Coesão Básica: Segundo desafio
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-validacao-estado-pais/src/main/java/com/deveficiente/heuristicas/coesaobasica/validarequest/v1/ValidaSeEstadoPertenceAPais.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-validacao-estado-pais/src/main/java/com/deveficiente/heuristicas/coesaobasica/validarequest/v2/ValidaSeEstadoPertenceAPais.java
