@@ -233,6 +233,9 @@ Agora vamos para os desafios. Aqui temos dois desafios e a explicação de cada 
 Após ter refletido e tentado implementar a solução, você pode(deve) conferir a sugestão de solução. Olhar a solução é importante para você ter a capacidade de avaliar o que você mesmo fez. Pode ser que sua solução seja melhor, pior, igual... Essa análise vai te dando cada vez mais clareza sobre os rumos do seu aprendizado.
 
 1.  [Sugestão de solução para o primeiro desafio](https://youtu.be/kp-YFWaC53k)
+  - Solução do autor: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
+
+
 2.  [Sugestão de solução para o segundo desafio](https://youtu.be/EUSmZpOSe3w)
 
 As branches com as sugestões de soluções podem ser acessadas seguindo os links abaixo

@@ -8,4 +8,17 @@ public class Pais {
 		super();
 		this.nome = nome;
 	}
+
+	@Override
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Pais pais)) return false;
+
+        return nome.equals(pais.nome);
+	}
+
+	@Override
+	public int hashCode() {
+		return nome.hashCode();
+	}
 }
