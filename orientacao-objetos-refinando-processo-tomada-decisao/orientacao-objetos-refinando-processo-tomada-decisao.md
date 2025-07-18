@@ -262,3 +262,12 @@ Retornos de tipos padrão, como por exemplo, String, Long e outros podem não se
 Alguns exemplos de texto como um **e-mail** ou **link** que são representados como String em alguns casos, possuem algumas Características adicionais e que diferem de sua característica original. No caso de **String**, é um conjunto de caracteres, por exemplo, já um email possui as caracteristicas similares a um texto, mas também possui um padrão de caracteres que o diferencia de uma **String** comum como o uso de `@` e os outros elementos. É este conceito que é abordado nesta heurística.
 
 A aula faz referência quanto ao uso de Factory Methods falado no LIvro Java Efetivo para facilitar a criação de um objeto. Item 1 trata especificamente sobre o uso de métodos estáticos de fábrica em vez de construtores.
+
+## Heurística #2 Quando o tipo padrão não é mais suficiente: Retorno sem a semântica suficiente
+Ao receber dados de tipos básicos (como `string` ou `int`), pode faltar informações cruciais para operar corretamente sobre eles. Exemplos como CPF ou percentual mostram que, sem abstrações, o código depende de "acoplamento mental" — entendimentos implícitos por parte do desenvolvedor.
+
+Se o tipo básico não comunica tudo que é necessário (ex.: formatação, arredondamento ou precisão), recomenda-se:
+
+- Criar uma abstração específica que encapsule o comportamento desejado.
+- Ou parametrizar o método com as informações necessárias para operar corretamente.
+
