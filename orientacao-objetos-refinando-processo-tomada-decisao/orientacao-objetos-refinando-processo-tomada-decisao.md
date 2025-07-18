@@ -243,3 +243,8 @@ public void executa(BuscaRequestV2 request) {
 ```
 
 fonte: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/0e42c602ba0662f192c9657fdd5d5e485fdf99ea/src/main/java/com/deveficiente/heuristicas/coesaobasica/strings/v1/BuscaController.java
+
+## Heurística #1 Coesão Básica: Primeiro desafio
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-treinamento-e-atividades/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v1/Treinamento.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
