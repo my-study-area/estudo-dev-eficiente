@@ -263,6 +263,10 @@ Alguns exemplos de texto como um **e-mail** ou **link** que são representados c
 
 A aula faz referência quanto ao uso de Factory Methods falado no LIvro Java Efetivo para facilitar a criação de um objeto. Item 1 trata especificamente sobre o uso de métodos estáticos de fábrica em vez de construtores.
 
+Exemplo do problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/valueobjects/senhaencodada/v1/CriaUsuarioV1Controller.java
+
+Exemplo de solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/valueobjects/senhaencodada/v2/CriaUsuarioV2Controller.java
+
 ## Heurística #2 Quando o tipo padrão não é mais suficiente: Retorno sem a semântica suficiente
 Ao receber dados de tipos básicos (como `string` ou `int`), pode faltar informações cruciais para operar corretamente sobre eles. Exemplos como CPF ou percentual mostram que, sem abstrações, o código depende de "acoplamento mental" — entendimentos implícitos por parte do desenvolvedor.
 
