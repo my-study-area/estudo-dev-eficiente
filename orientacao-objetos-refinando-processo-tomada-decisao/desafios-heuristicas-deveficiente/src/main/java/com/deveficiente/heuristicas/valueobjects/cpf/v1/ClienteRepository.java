@@ -7,6 +7,6 @@ public class ClienteRepository {
 
 
 	public Cliente busca(Long id) {
-		return new Cliente("985746985643");
+		return new Cliente(CPFLimpo.criar(String.valueOf("985746985643")));
 	}
 }

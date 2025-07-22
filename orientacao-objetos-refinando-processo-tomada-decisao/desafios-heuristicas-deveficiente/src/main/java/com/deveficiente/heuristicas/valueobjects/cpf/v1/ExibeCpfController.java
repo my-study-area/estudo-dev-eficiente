@@ -23,7 +23,7 @@ public class ExibeCpfController {
 		/*
 		 * Como você sabe se o cpf está na formataçÃo que você precisa aqui?	
 		 */
-		return cliente.getCpf();
+		return cliente.getCpfLimpo();
 	}
 	
 }

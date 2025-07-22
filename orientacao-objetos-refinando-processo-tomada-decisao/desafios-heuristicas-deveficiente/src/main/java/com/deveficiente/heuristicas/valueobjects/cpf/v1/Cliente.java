@@ -2,16 +2,22 @@ package com.deveficiente.heuristicas.valueobjects.cpf.v1;
 
 public class Cliente {
 
-	private String cpf;
+	private CPFLimpo cpf;
 
-	public Cliente(String cpf) {
+	public Cliente(CPFLimpo cpf) {
 		super();
 		this.cpf = cpf;
 	}
 
 
-	public String getCpf() {
-		return cpf;
+	public String getCpfLimpo() {
+		return cpf.getCPFLimpo();
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Cliente{" +
+				"cpf=" + cpf +
+				'}';
+	}
 }

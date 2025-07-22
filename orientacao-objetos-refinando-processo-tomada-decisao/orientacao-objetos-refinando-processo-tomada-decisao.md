@@ -275,3 +275,7 @@ Se o tipo básico não comunica tudo que é necessário (ex.: formatação, arre
 - Criar uma abstração específica que encapsule o comportamento desejado.
 - Ou parametrizar o método com as informações necessárias para operar corretamente.
 
+## Heurística #2 Quando o tipo padrão não é mais suficiente: Primeiro desafio
+Problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/valueobjects/cpf/v1/CriaClienteController.java
+
+Minha solução: [CriaClienteController.java](./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/valueobjects/cpf/v1/CriaClienteController.java)
