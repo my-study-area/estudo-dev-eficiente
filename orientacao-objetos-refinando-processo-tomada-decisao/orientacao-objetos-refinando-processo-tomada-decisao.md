@@ -304,3 +304,60 @@ Agora surge o desafio de permitir que o início da posição da lista de ativida
 Versão inicial, antes da solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-treinamento-e-atividades/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
+
+## Heurística #2 Quando o tipo padrão não é mais suficiente: Relacionando as soluções com padrões existentes: Value Object e Tiny Objects
+Gerado por IA:
+
+### **Entendendo Quando os Tipos Básicos Não São Suficientes**
+
+No desenvolvimento de software, frequentemente utilizamos tipos de dados padrão que a linguagem oferece, como `String` para texto ou `int` para números inteiros. No entanto, o palestrante explica que, em certos casos, esses tipos **não possuem as características ou os comportamentos específicos** que precisamos para representar determinadas informações. Isso significa que eles não conseguem expressar toda a "semântica" (o significado e as regras) por trás de um dado.
+
+Para resolver essa limitação, são abordadas duas soluções de padrões de projeto: **Value Objects** e **Tiny Objects**.
+
+#### 1. **Value Objects (Objetos de Valor)**
+
+*   **O que são?** São classes que representam um valor ou conceito específico do domínio da sua aplicação. A ideia de Value Object é derivada do **Domain-Driven Design (DDD)**.
+*   **Qual a principal característica?** A **igualdade** de dois Value Objects é definida **pelas informações de todos os seus atributos**.
+    *   **Exemplos Clássicos:**
+        *   Um **CPF**: Dois CPFs são iguais se tiverem os mesmos números.
+        *   Uma **senha**: Duas senhas são iguais se o texto for o mesmo.
+        *   Uma **posição**: Duas posições são iguais se estiverem no mesmo ponto.
+        *   Um **endereço** (contendo rua, bairro, número): Dois endereços são considerados iguais se estiverem na mesma rua, no mesmo bairro e tiverem o mesmo número.
+*   **Quando usar?** Você deve considerar criar um Value Object quando perceber que está usando **sempre juntos** vários tipos básicos (como `rua`, `bairro` e `número` de um endereço) e **criando comportamentos ou operações que combinam esses dados**. Isso ajuda a **isolar esses comportamentos** e criar operações sobre eles em um único lugar. Essas informações, que fazem parte do domínio da aplicação, podem precisar de uma abstração específica para elas.
+
+#### 2. **Tiny Objects (Pequenos Objetos)**
+
+*   **O que são?** São, como o nome sugere, **objetos pequenos**. A ideia por trás deles é **criar uma abstração para um conceito** que, se fosse representado por um tipo básico (como um número), perderia parte de seu significado ou funcionalidade. O nome "Tiny Object" pode ter vindo do C++.
+*   **Qual a principal ideia?** Se um tipo básico não consegue representar bem um conceito, crie uma classe para ele.
+    *   **Exemplo:** A **velocidade de um carro**. Em vez de representar a velocidade apenas como um número inteiro, você pode criar uma classe `Velocidade`. Assim, a classe `Velocidade` pode ter métodos para acumular velocidade, compará-la, etc., algo que um simples `int` não faria naturalmente. O palestrante menciona que ele mesmo tem uma influência indireta desse pensamento sobre abstrações específicas para casos específicos.
+*   **Cuidado Importante!** O palestrante dá um alerta crucial: **não exagere na criação de Tiny Objects!**. Ele compartilha uma experiência pessoal onde criou classes para tudo (sobrenome, telefone, celular, etc.). O resultado foi que essas classes muitas vezes não tinham nenhuma "inteligência" (comportamento isolado) e apenas "delegavam" chamadas para os tipos básicos, tornando o código mais complexo sem necessidade. Ele enfatiza a importância de ter um sistema claro para medir a necessidade antes de sair criando esse tipo de abstração.
+
+### **Heurísticas: Quando Devo Criar Uma Abstração (Value Object ou Tiny Object)?**
+
+A decisão de criar uma nova classe para um tipo é fundamental. O palestrante sugere avaliar em dois cenários principais:
+
+1.  **Quando você está recebendo parâmetros (informações de entrada):**
+    *   **Possui características ou semânticas adicionais?** Por exemplo:
+        *   Um número decimal (`BigDecimal`) que precisa ter um máximo de `X` casas decimais.
+        *   Um CPF que precisa estar formatado com pontos no local correto ou seguir um algoritmo de hash específico.
+        *   Um telefone que precisa estar formatado ou um nome que não pode ter espaços em branco.
+    *   **É fácil bloquear a execução do método ou validar a informação no momento da compilação ou execução usando os tipos padrão?**
+        *   Se for **fácil** validar usando os tipos padrão (ex: `BigDecimal` com `X` casas decimais), talvez você **não precise** criar uma nova abstração.
+        *   Se for **difícil** validar (ex: a regra de um CPF com algoritmo de hash), então **criar uma abstração** pode maximizar a chance de receber o parâmetro corretamente, pois a lógica de validação estaria encapsulada na nova classe.
+
+2.  **Quando você está recebendo um valor de retorno (informações de saída):**
+    *   **O tipo padrão que você recebe tem uma "semântica" envolvida?** Por exemplo, uma `String` que tem informações separadas por vírgula ou espaço, ou um número que precisa de um certo número de casas decimais ou um valor máximo.
+    *   **Você consegue extrair essa informação semanticamente do tipo padrão facilmente?**
+        *   Se não, você pode optar por **parametrizar o método** para que o retorno já seja o que você espera, mas o palestrante comenta sobre os possíveis perigos desse caminho.
+        *   Ou, o caminho preferível, **retornar uma abstração própria** (sua nova classe) que já contenha os comportamentos e informações que facilitarão a vida de quem for usar esse retorno.
+
+Em resumo, a ideia é criar essas abstrações específicas (Value Objects e Tiny Objects) quando os tipos básicos da linguagem não são suficientes para expressar a complexidade, as regras de negócio ou os comportamentos associados a um determinado dado. Isso ajuda a construir um código com mais **qualidade** e **clareza**.
+
+---
+
+**Analogia para fixar:**
+
+Pense nos tipos padrão da linguagem (como `int` ou `String`) como **blocos de montar LEGO básicos** (quadrados, retângulos simples). Eles são ótimos para a maioria das construções.
+
+*   Um **Value Object** seria como um **conjunto de blocos LEGO que, juntos, formam algo com um significado único e específico**, como uma "roda de carro" (que tem aro, pneu, etc.). A "roda" é definida por todos esses pedaços, e duas "rodas" são iguais se todos os seus componentes forem os mesmos. Você usa isso quando precisa de um "componente" que é sempre tratado como uma unidade com sua própria identidade de valor.
+*   Um **Tiny Object** seria um **bloco LEGO superespecializado**, talvez com uma engrenagem ou um sensor embutido. Você não usaria um desses para cada pequeno detalhe, apenas quando um bloco simples não pode cumprir a função complexa que você precisa (como medir a "velocidade" do seu carro LEGO, que não é só um número, mas algo que precisa de um comportamento específico). A armadilha é transformar todo bloco simples em um bloco superespecializado, o que só tornaria a construção mais difícil e menos flexível.
