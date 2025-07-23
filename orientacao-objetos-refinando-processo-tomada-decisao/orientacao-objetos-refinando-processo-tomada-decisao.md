@@ -361,3 +361,26 @@ Pense nos tipos padrão da linguagem (como `int` ou `String`) como **blocos de m
 
 *   Um **Value Object** seria como um **conjunto de blocos LEGO que, juntos, formam algo com um significado único e específico**, como uma "roda de carro" (que tem aro, pneu, etc.). A "roda" é definida por todos esses pedaços, e duas "rodas" são iguais se todos os seus componentes forem os mesmos. Você usa isso quando precisa de um "componente" que é sempre tratado como uma unidade com sua própria identidade de valor.
 *   Um **Tiny Object** seria um **bloco LEGO superespecializado**, talvez com uma engrenagem ou um sensor embutido. Você não usaria um desses para cada pequeno detalhe, apenas quando um bloco simples não pode cumprir a função complexa que você precisa (como medir a "velocidade" do seu carro LEGO, que não é só um número, mas algo que precisa de um comportamento específico). A armadilha é transformar todo bloco simples em um bloco superespecializado, o que só tornaria a construção mais difícil e menos flexível.
+
+## Heurística #3 Polimorfismo para postergar decisões ou expressar incertezas no código: Explicação e exemplo
+Polimorfismo
+
+Execução de métodos dinâmicos através de implementações de interfaces
+
+Criação de classes concretas com base nas interfaces.
+
+Explicar o polimorfismo é mais fácil que aplicar o polimorfismo. Esta heurística é para isso.
+
+Postegar as decisões quando não temos certeza sobre a solução.
+
+Na aula mostra um exemplo de sistema de avaliação de3 resposta de um exercício. O primeiro passo é slavar as informações no banco de dados e depois enviar as informações da reposta para um outro sistema.
+Neste momento o sistema foi desenvolvimento utilizando o SQS como implementação usando uma classe concreta. O uso da classes concreta não flexibiliza para que futuramente utilize uma outra solução como uma fila MQ em outras soluções. Na explicação existe uma necessidade não determinada atualmente sobre a continuação de uma fila SQS ou MQ.
+
+
+Problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/naoseiqualfilausar/v1/RecebeRespostaExercicioController.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/naoseiqualfilausar/v2/RecebeRespostaExercicioController.java
+
+[Exemplo com uso de interface funcional](./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/naoseiqualfilausar/v2/RecebeRespostaExercicioController.java)
+
+O conhecimento que fica no entendimento da aula é que podemos utilizar o polimorfismo através das interfaces para postergar a decisão de utilizar uma fila SQS da AWS ou outra solução no futuro. Através da implementação da interface podemos criar uma solução que permite a flexibilidade para desenvolver uma solução e facilmente alterar para uma outra solução.

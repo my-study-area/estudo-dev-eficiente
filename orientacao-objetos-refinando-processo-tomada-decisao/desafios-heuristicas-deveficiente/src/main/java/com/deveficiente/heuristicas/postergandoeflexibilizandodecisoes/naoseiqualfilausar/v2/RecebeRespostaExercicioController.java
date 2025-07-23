@@ -42,4 +42,25 @@ public class RecebeRespostaExercicioController {
 
 		this.submeteRespostaParaAnalise.envia(novaResposta);
 	}
+
+	public static void main(String[] args) {
+		RecebeRespostaExercicioController controller = new RecebeRespostaExercicioController(
+				new RespostaRepository(),
+				new ExercicioRepository(),
+				new SubmeteComAmazonSQS(new AmazonSQS())
+		);
+
+		controller.executa(new NovaRespostaRequest(1L, "Resposta"));
+
+		/**
+		 * Como o controller receber um SubmeteRespostaParaAnalise que é uma interface com somente um método,
+		 * chamamos isso de interface funcional e podemos utilizar conforme o exemplo abaixo.
+		 */
+		RecebeRespostaExercicioController controller2 = new RecebeRespostaExercicioController(
+				new RespostaRepository(),
+				new ExercicioRepository(),
+				resposta -> System.out.println("Alguma outra coisa.")
+		);
+		controller2.executa(new NovaRespostaRequest(2L, "Resposta 2"));
+	}
 }
