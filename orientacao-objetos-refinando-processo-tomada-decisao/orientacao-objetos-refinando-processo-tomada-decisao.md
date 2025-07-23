@@ -297,3 +297,10 @@ Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solu
 
 
 ## Heurística #2 Quando o tipo padrão não é mais suficiente: Refletindo sobre o que fizemos na heurística de coesão básica
+Desafio da lista de atividades. Primeiro devemos implementar a adição ded atividade e depois a identificação da atividade numa lista. O primeiro estará na posição zero e assim por diante.
+
+Agora surge o desafio de permitir que o início da posição da lista de atividades inicie com o valor zero ou outro valor.
+
+Versão inicial, antes da solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/17348204d2659ba00ca7a95e6431654578593f6d/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-coesao-desafio-treinamento-e-atividades/src/main/java/com/deveficiente/heuristicas/coesaobasica/treinamentoseatividades/v2/Treinamento.java
