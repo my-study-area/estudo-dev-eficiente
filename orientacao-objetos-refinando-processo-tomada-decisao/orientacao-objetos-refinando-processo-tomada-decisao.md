@@ -384,3 +384,13 @@ Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/mast
 [Exemplo com uso de interface funcional](./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/naoseiqualfilausar/v2/RecebeRespostaExercicioController.java)
 
 O conhecimento que fica no entendimento da aula é que podemos utilizar o polimorfismo através das interfaces para postergar a decisão de utilizar uma fila SQS da AWS ou outra solução no futuro. Através da implementação da interface podemos criar uma solução que permite a flexibilidade para desenvolver uma solução e facilmente alterar para uma outra solução.
+
+
+## Heurística #3 Polimorfismo para postergar decisões ou expressar incertezas no código: Desafio
+O desafio está em implementar um código que suporte a modificação do sitema que facilite a indexação da informação ao realizar uma busca. Nesse momento estamos entre o postgre search, lucene direto ou elastic search. Não dominamos muito nenhum e existe uma boa opção de escolhermos algo e mudarmos de opinião.
+
+Problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v1/NovaAtividadeController.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-flexibilizar-decisao-indexacao/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java
+
+Minha solução: [./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java](./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java)
