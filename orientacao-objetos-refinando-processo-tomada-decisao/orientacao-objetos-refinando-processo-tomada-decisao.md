@@ -394,3 +394,47 @@ Problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/maste
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-flexibilizar-decisao-indexacao/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java
 
 Minha solução: [./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java](./desafios-heuristicas-deveficiente/src/main/java/com/deveficiente/heuristicas/postergandoeflexibilizandodecisoes/indexarconteudo/v2/NovaAtividadeController.java)
+
+## Heurística #4 Até coleções podem ganhar suas próprias abstrações:
+Explicação da heurística utilizando código fonte do Spring.
+
+Exemplo de refatoração de código gerado por IA utilizando o conceito apresentado na aula: https://gist.github.com/adrianoavelino/67e64f811ff3016c315b010b15a3e83a
+
+
+**Material teórico gerado por IA:**
+
+
+A aula "Heurística #4 Até coleções podem ganhar suas próprias abstrações" aborda uma **heurística** para melhorar a organização e a **manutenibilidade do código** ao lidar com operações sobre coleções.
+
+### Problema Identificado
+
+*   O problema surge quando uma classe possui **atributos do tipo coleção** (como `List` ou `Set`) e múltiplos métodos que realizam diversas e complexas operações sobre essas coleções.
+*   Isso pode levar a uma **dificuldade de entendimento** da unidade de código, especialmente se as operações envolvem laços (`for`) e condicionais (`if/continue`) complexos.
+*   Métricas de código, como a **complexidade ciclomática** ou a **complexidade intrínseca do CDD**, podem sinalizar que a classe está se tornando "pesada" ou "pintando de vermelho", indicando um potencial problema de manutenção e entendimento. O uso frequente de `continue` em Java, por exemplo, pode ser um indicativo de complexidade.
+
+### Exemplo Prático (Spring Framework)
+
+*   A heurística é ilustrada com um exemplo real do código-fonte do **Spring Framework**, especificamente a classe `ContentNegotiationManager` no módulo `Spring web`.
+*   Essa classe possui dois atributos de coleção:
+    *   `strategies`: uma lista (`List`) de `ContentNegotiationStrategy`.
+    *   `resolvers`: um conjunto (`Set`) de `MediaTypeFileExtensionResolvers`.
+*   O palestrante demonstra que há **múltiplas lógicas complexas e recorrentes** executadas sobre essas coleções dentro da própria `ContentNegotiationManager`:
+    *   **Sobre `strategies`**: Lógicas para adicionar resolvedores de tipo `MediaTypeFileExtensionResolver` ao `resolvers`, e para verificar e extrair `mediaTypes` que não são iguais a uma lista padrão (`MediaTypeAllList`).
+    *   **Sobre `resolvers`**: Lógicas para acumular valores, verificar extensões de forma única, e carregar `mediaTypes` de forma específica.
+*   Embora o código existente no Spring não seja considerado "equivocado" (errado) — pois ele segue a heurística de ter a lógica sobre o estado do objeto dentro de métodos da própria classe — ele pode ser **difícil de entender** devido à sua complexidade e ao volume de operações sobre as coleções.
+
+### Solução Proposta: Abstração de Coleções
+
+*   A ideia é criar **novas classes dedicadas** que "embrulham" (wrapper) essas coleções e encapsulam as operações específicas sobre elas.
+*   Por exemplo, em vez de ter um atributo `List<ContentNegotiationStrategy>` diretamente na `ContentNegotiationManager`, pode-se ter uma classe como `ContentNegotiationStrategies` (com visibilidade de pacote, por exemplo) que seria um *wrapper* para essa lista.
+*   Todas as operações complexas que antes estavam na `ContentNegotiationManager` seriam **movidas para dentro dessa nova classe** `ContentNegotiationStrategies`.
+*   O mesmo raciocínio se aplica ao `Set<MediaTypeFileExtensionResolvers>`, que poderia ser encapsulado em uma classe como `MediaTypeFileExtensionResolvers`, para a qual as operações seriam movidas.
+*   Essa abordagem **distribui a complexidade**, **facilitando o entendimento e a manutenibilidade** da classe original, pois ela agora delega as operações específicas da coleção para as novas classes *wrapper*.
+
+### Quando Aplicar
+
+*   Você deve considerar essa refatoração quando perceber que **duas ou mais operações** estão sendo realizadas sobre uma determinada coleção que é um atributo da sua classe.
+*   É especialmente relevante quando as **métricas de código** (como as do Sonar ou as baseadas no CDD) ou os **princípios de design** (como SOLID) indicam que a classe está se tornando difícil de manter ou dando sinais de dificuldade de manutenibilidade.
+*   Essa heurística se alinha com a ideia de criar uma nova classe quando os tipos padrões da linguagem não possuem a **semântica necessária** para representar adequadamente a lógica de domínio.
+
+Pense nisso como um bibliotecário que, em vez de listar todos os livros, autores e empréstimos em um único e imenso caderno (a classe principal), decide criar cadernos menores e especializados: um só para os "livros disponíveis" (a classe que encapsula a coleção de livros), outro para "autores e suas obras" (uma classe para a coleção de autores), e assim por diante. Cada caderno menor se torna mais fácil de manusear e entender suas operações, e o bibliotecário principal agora apenas delega a tarefa de verificar os livros ao caderno de "livros disponíveis", tornando seu próprio trabalho mais claro e organizado.
