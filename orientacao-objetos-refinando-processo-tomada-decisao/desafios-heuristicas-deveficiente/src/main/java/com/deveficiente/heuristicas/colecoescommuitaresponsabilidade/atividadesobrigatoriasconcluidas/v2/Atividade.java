@@ -21,12 +21,12 @@ public class Atividade implements Comparable<Atividade> {
 		this.respostas.add(resposta);
 	}
 
-	public TipoAtividade getTipoAtividade() {
-		return tipoAtividade;
-	}
-
 	public List<Resposta> getRespostas() {
 		return respostas;
+	}
+
+	public boolean isOpcional() {
+		return tipoAtividade == TipoAtividade.OPCIONAL;
 	}
 
 	@Override

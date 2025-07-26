@@ -2,78 +2,34 @@ package com.deveficiente.heuristicas.colecoescommuitaresponsabilidade.atividades
 
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class Treinamento {
 
 	private String titulo;
-	private SortedSet<SecaoAtividades> secoes = new TreeSet<>();
-	private static BigDecimal PERCENTUAL_MULTIPLICACAO = new BigDecimal(100);
+	private ColecaoSecoesAtividades colecaoSecoesAtividades;
 
-	public Treinamento(String titulo, List<SecaoAtividades> secoes) {
+	public Treinamento(String titulo, List<SecaoAtividades> listaSecoesAtividades) {
 		super();
 		this.titulo = titulo;
-		secoes.forEach(this.secoes :: add);
+		this.colecaoSecoesAtividades = new ColecaoSecoesAtividades(listaSecoesAtividades);
 	}
 
-	/**
-	 * Relacionamento entre as classes
-	 * Treinamento > []secoes atividades > []atividades > opcional/obrigatoria
-	 *
-	 */
+	private int getTotalAtividades() {
+		return colecaoSecoesAtividades.getTotalAtividades();
+	}
+
 	public int calculaQuantidadeAtividadesObrigatorias() {
-		return getAtividadesObrigatorias().size();
-	}
-
-	private SortedSet<Atividade> getAtividadesObrigatorias() {
-		SortedSet<Atividade> atividadesObrigatorias = new TreeSet<>();
-		for (Atividade atividade : getTodasAtividades()) {
-			if (atividade.getTipoAtividade() == TipoAtividade.OPCIONAL) continue;
-			atividadesObrigatorias.add(atividade);
-		}
-		return atividadesObrigatorias;
-	}
-
-	private SortedSet<Atividade> getTodasAtividades() {
-		SortedSet<Atividade> todasAtividades = new TreeSet<>();
-		for (SecaoAtividades secaoAtividades : secoes) {
-			SortedSet<Atividade> atividades = secaoAtividades.getAtividades();
-			todasAtividades.addAll(atividades);
-		}
-		return todasAtividades;
+		return colecaoSecoesAtividades.calculaQuantidadeAtividadesObrigatorias();
 	}
 
 	public int calculaQuantasObrigatoriasForamFinalizadas(Aluno aluno) {
-		int total = 0;
-		for (Atividade atividade : getAtividadesObrigatorias()) {
-			List<Resposta> respostas = atividade.getRespostas();
-			if (respostas.isEmpty()) continue;
-			for (Resposta resposta : respostas) {
-                if (resposta.pertenceAoAluno(aluno)) {
-                    total+=1;
-                }
-			}
-		}
-		return total;
+		return colecaoSecoesAtividades.calculaQuantasObrigatoriasForamFinalizadas(aluno);
 	}
 
-
-
 	public BigDecimal calculaPercentualDeAtividadesObrigatorias() {
-		int total = getTodasAtividades().size();
-		int obrigatorias = getAtividadesObrigatorias().size();
-
-		if (total == 0) {
-			return BigDecimal.ZERO;
-		}
-
-		return BigDecimal.valueOf(obrigatorias)
-				.multiply(PERCENTUAL_MULTIPLICACAO)
-				.divide(BigDecimal.valueOf(total), RoundingMode.CEILING);
+		return colecaoSecoesAtividades.calculaPercentualDeAtividadesObrigatorias();
 	}
 
 	public static void main(String[] args) {
@@ -113,7 +69,7 @@ public class Treinamento {
 	}
 
 	private static void imprimirValidacaoDosValores(Treinamento treinamento, Aluno aluno) {
-		System.out.println("Total de atividades: " + treinamento.getTodasAtividades().size());
+		System.out.println("Total de atividades: " + treinamento.getTotalAtividades());
 		System.out.println("Total de atividades obrigatórias: " + treinamento.calculaQuantidadeAtividadesObrigatorias());
 		System.out.println("Total de atividades obrigatórias finalizadas pelo aluno `" + aluno.getEmail() +"`: " + treinamento.calculaQuantasObrigatoriasForamFinalizadas(aluno));
 		System.out.println("Percentual de atividade obrigatórias: " + treinamento.calculaPercentualDeAtividadesObrigatorias() + "%");
