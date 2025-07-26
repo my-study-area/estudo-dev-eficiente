@@ -438,3 +438,14 @@ A aula "Heurística #4 Até coleções podem ganhar suas próprias abstrações"
 *   Essa heurística se alinha com a ideia de criar uma nova classe quando os tipos padrões da linguagem não possuem a **semântica necessária** para representar adequadamente a lógica de domínio.
 
 Pense nisso como um bibliotecário que, em vez de listar todos os livros, autores e empréstimos em um único e imenso caderno (a classe principal), decide criar cadernos menores e especializados: um só para os "livros disponíveis" (a classe que encapsula a coleção de livros), outro para "autores e suas obras" (uma classe para a coleção de autores), e assim por diante. Cada caderno menor se torna mais fácil de manusear e entender suas operações, e o bibliotecário principal agora apenas delega a tarefa de verificar os livros ao caderno de "livros disponíveis", tornando seu próprio trabalho mais claro e organizado.
+
+## Heurística #4 Até coleções podem ganahr suas próprias abstrações: Desafio
+Este desafio está mais aberto, não existe uma restrição sobre o que deve ser resolvido. A inteção é praticar refletindo os conhecimentos adquiridos até o momento.
+
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/colecoescommuitaresponsabilidade/atividadesobrigatoriasconcluidas/v1/Treinamento.java
+
+Solução inicial: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/7d40f042f2c1b4fd02a65f107ec4882d23f9aca3/src/main/java/com/deveficiente/heuristicas/colecoescommuitaresponsabilidade/atividadesobrigatoriasconcluidas/v1/Treinamento.java
+
+Solução final: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desafio-colecaomuitasresponsabilidads-treinoeatividades/src/main/java/com/deveficiente/heuristicas/colecoescommuitaresponsabilidade/atividadesobrigatoriasconcluidas/v1/Treinamento.java
+
+> TODO: Fiquei com algumas dúvidas, voltar no assunto futuramente.
