@@ -449,3 +449,134 @@ Solução inicial: https://github.com/asouza/desafios-heuristicas-deveficiente/b
 Solução final: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desafio-colecaomuitasresponsabilidads-treinoeatividades/src/main/java/com/deveficiente/heuristicas/colecoescommuitaresponsabilidade/atividadesobrigatoriasconcluidas/v1/Treinamento.java
 
 > TODO: Fiquei com algumas dúvidas, voltar no assunto futuramente.
+
+
+## Heurística #5 Identificando oportunidades de aplicação de funções aplicar template method: Explicação e exemplo
+Baseado no design de projeto Template method
+
+`@Service` do Spring utiliza um tipo de Template Method
+
+No Java podemos usar as Functions através de um Supplier para executar um trecho de código.
+
+O gatilho para esse problema ocorre quando um conjunto de código em determinado escopo precisa aguardar algum outro processo, ou seja, meu trecho de código fica aguardando um processo anterior. Por exemplo num controller Spring que se comunica com um sistema externo (Typeform, um sistema parecido com Google Form) e depois persiste num banco de dados. Normalmente utilizamos uma anotação `@Transaction` para garantir a consistência do banco de dados, mas neste caso perdemos um tempo aguardando uma resposta do sistema externo. Observe que isso torna o banco de dados mais lento, bloqueando o banco de dados de executar outras transações para aguardar um sistema externo trazer alguma respostas. O correto neste cenário é não ocorrer o bloqueio de requisições para aguardar um outro sistema que não tem uma relação direta com o banco de dados.
+
+Analise o código abaixo com o problema:
+```java
+@PostMapping("/recebe-resposta/v1")
+@Transactional
+public ResponseEntity<?> executa(Aluno alunoLogado,
+    NovaRespostaRequest request) {
+
+  /*
+    * Aqui tem uma chamada remota e estamos segurando recurso do
+    * banco de dados sem fazer nada com ele. Como melhorar?
+    */
+  if (integracaoTypeForm.verificaExistencia(request.idExercicio,
+      alunoLogado.getEmail())) {
+    Resposta novaResposta = request.toResposta(exercicioRepository);
+    respostaRepository.salva(novaResposta);
+    return ResponseEntity.ok("Resposta salva");
+  }
+
+  return ResponseEntity.notFound().build();
+}
+```
+
+Analise o código abaixo com solução:
+```java
+@Component
+public class ExecutaComTransacao {
+
+  @Transactional
+  public <T> T comRetorno(Supplier<T> funcao) {
+    System.out.println("Simulando abertura de transacao");
+    T retorno = funcao.get();
+    System.out.println("Simulando commit da transacao");
+    return retorno;
+
+  }
+}
+
+@PostMapping("/recebe-resposta/v1")
+public ResponseEntity<?> executa(Aluno alunoLogado,
+    NovaRespostaRequest request) {
+
+  if (integracaoTypeForm.verificaExistencia(request.idExercicio,
+      alunoLogado.getEmail())) {
+    Resposta novaResposta = request.toResposta(exercicioRepository);
+    return executaComTransacao.comRetorno(() -> {
+      System.out.println("Salvando a resposta e definindo retorno");
+      respostaRepository.salva(novaResposta);
+      return ResponseEntity.ok("Resposta salva");				
+    });
+  }
+
+  return ResponseEntity.notFound().build();
+}
+```
+
+Antes: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/templatesefuncoes/transacoes/v1/RecebeRespostaExercicioController.Java
+
+Depois: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/templatesefuncoes/transacoes/v2/RecebeRespostaExercicioController.java
+
+
+Conteúdo gerado por IA:
+
+### **Heurística 5: Aplicação do Template Method com Funções**
+
+Esta heurística foca na identificação e aplicação do **Design Pattern Template Method** utilizando conceitos de **programação funcional**. É especialmente relevante para linguagens que suportam esse paradigma, como JavaScript, Go, Clojure, e até mesmo linguagens orientadas a objetos que possuem funcionalidades relacionadas a funções. O objetivo é desenvolver um "olho clínico" para reconhecer oportunidades de uso deste padrão.
+
+#### **1. O que é o Template Method?**
+
+O Template Method é um padrão de design que permite **estruturar o código de forma a ter uma parte padrão (o template)** e, dentro dela, um **pedaço flexível que pode ser customizado** para executar de diferentes maneiras.
+
+#### **2. O Problema Ilustrativo (Cenário de Exemplo)**
+
+O exemplo central da aula descreve um **controle Spring que recebe a resposta de um exercício**.
+
+*   **Comportamento Padrão do Spring `@Transactional`**: Quando um método é marcado com `@Transactional` no Spring, ele se comporta como um Template Method. Por baixo dos panos, o Spring **abre uma transação, executa o código do seu método e, em seguida, commita a transação** (ou faz rollback em caso de erro).
+*   **O Problema Específico**: No cenário, o código dentro do método `@Transactional` realiza uma **integração com um sistema externo** (um serviço do Typeform) para verificar se um exercício foi respondido. Somente se o Typeform retornar que a resposta existe, ela é salva no banco de dados.
+    *   Ao usar `@Transactional`, uma **conexão com o banco de dados é aberta e uma transação é iniciada**.
+    *   O problema é que essa **conexão é mantida (segurada)** enquanto a **chamada remota para a API externa** está sendo realizada, mesmo que essa chamada não tenha relação com o banco de dados.
+    *   **Ineficiência**: Isso significa que um **recurso valioso (a conexão com o banco de dados) fica travado por um tempo desnecessário**, aguardando uma operação externa que não depende do banco.
+*   **O Desejo**: O ideal seria que apenas a parte do código que interage com o banco de dados (salvar a resposta) rodasse dentro de uma transação. Além disso, essa transação só deveria ser disparada **se, e somente se, o serviço do Typeform retornar que a resposta foi salva**.
+
+#### **3. O Gatilho: Quando Usar o Template Method com Funções?**
+
+A heurística sugere que o gatilho para usar essa abordagem é quando você tem **um pedacinho de código (duas ou três linhas, por exemplo) que você deseja executar dentro de um determinado escopo ou contexto**.
+
+*   **Exemplos de Contextos**:
+    *   Rodar o código dentro de uma **transação**.
+    *   Rodar o código considerando uma **outra característica específica**.
+    *   Rodar coisas usando **serviços de infraestrutura classe A**, como um log padrão para determinadas operações. Você pode ter um método que executa esse log padrão e, no meio dele, precisa executar um código que é diferente.
+
+#### **4. A Solução com Programação Funcional**
+
+A chave da solução é a **transformação do pedaço de código flexível em uma função**.
+
+*   **Envelopando o Código**: As linhas de código que precisam ser executadas dentro de um contexto específico (como uma transação ou um log padrão) podem ser **envelopadas em uma função**.
+*   **Passando como Argumento**: Essa função, uma vez criada, pode ser **passada como argumento** para qualquer outro lugar.
+*   **Execução pelo Receptor**: Quem recebe essa função (o template) pode então **chamar essa função no momento e contexto apropriado**. Em Java, um `Supplier` pode ser chamado com o método `get()`; em JavaScript, a função pode ser chamada diretamente.
+
+#### **5. A Solução Implementada (Versão 2)**
+
+Na versão resolvida do problema:
+
+*   A anotação `@Transactional` original é **removida** do controle.
+*   É criada uma **nova classe (ex: `ExecutaComTransacao`)** com um método (ex: `comRetorno`) que será responsável por gerenciar a transação.
+*   Este método `comRetorno` recebe como argumento a **função que representa o pedaço de código a ser executado transacionalmente** (no exemplo, a função `salvaNovaResposta`).
+*   **Com Spring**: A nova classe/método `ExecutaComTransacao.comRetorno` é marcada com `@Transactional`, fazendo com que o Spring gerencie a transação ao chamar esse método.
+*   **Sem Spring**: Se não houver Spring, o gerenciamento da transação é feito manualmente dentro do método `comRetorno`: abrir a conexão, abrir a transação, chamar a função passada como argumento e, finalmente, commitar a transação.
+
+Isso permite **executar trechos específicos de código dentro de uma transação onde e quando você quiser**, oferecendo maior controle e otimização.
+
+#### **6. Benefícios e Conclusões**
+
+*   **Controle Granular**: Permite que você execute apenas o trecho de código necessário dentro de um escopo específico (como uma transação), em vez de todo o método.
+*   **Otimização de Recursos**: Evita que recursos (como conexões de banco de dados) fiquem travados por mais tempo do que o necessário, especialmente durante operações externas ou de infraestrutura.
+*   **Simplicidade na Implementação**: A solução em si é considerada de **baixo esforço de implementação**, embora exija um bom conhecimento de funções e passagem de funções como argumento.
+*   **Poderoso para Infraestrutura**: É uma abordagem **muito poderosa** para situações que envolvem serviços de infraestrutura, onde você quer limitar o uso de um recurso ao tempo mínimo possível.
+*   **A Heurística Final**: Quando você perceber um **conjunto de linhas de código que deseja rodar em um determinado escopo**, você deve:
+    1.  **Transformar esse código em uma função**.
+    2.  **Criar uma classe para representar o escopo** que você quer delimitar (ex: gerenciamento de transação, logging).
+    Essa combinação resulta no **Template Method com funções**, proporcionando flexibilidade e eficiência.
