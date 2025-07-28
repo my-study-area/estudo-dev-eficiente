@@ -580,3 +580,27 @@ Isso permite **executar trechos específicos de código dentro de uma transaçã
     1.  **Transformar esse código em uma função**.
     2.  **Criar uma classe para representar o escopo** que você quer delimitar (ex: gerenciamento de transação, logging).
     Essa combinação resulta no **Template Method com funções**, proporcionando flexibilidade e eficiência.
+
+
+## Heurística #5 Identificando oportunidades de aplicação de funções para construir templates de código: Desafio
+O desafio é adicionar uma requisição assincrona para um sistema externo para avaliação da resposta, depois da persistência no banco de dados e de forma assincrôna.
+
+### Desafio
+🎯 Descrição da Atividade — Heurística 5: Execução Assíncrona de Código
+
+Nesse desafio, a ideia é botar a mão na massa com um problema real: quando o aluno envia uma resposta de exercício, ela precisa ser salva e enviada pra um sistema automático de correção baseado em machine learning.
+
+Mas tem um detalhe importante: esse envio tem que ser **assíncrono** — ou seja, feito "em paralelo", sem travar o restante do processo. Só que você **não pode alterar** o método `submeteRespostaParaAnalise`, que já está prontinho.
+
+💥 O que você precisa fazer:
+- Fazer essa chamada de forma assíncrona, só nesse ponto específico do código.
+- Manter tudo funcionando bonitinho sem quebrar a lógica que já existe.
+- Pensar como aplicar templates e técnicas de desacoplamento sem complicar demais.
+
+💡 Esse exercício é excelente pra quem quer mandar bem em orientação a objetos, código limpo e boas práticas de arquitetura. Bora codar com estilo!
+
+
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/templatesefuncoes/execucaoassincrona/v1/RecebeRespostaExercicioController.java
+
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-templates-funcoes-execucao-assincrona/src/main/java/com/deveficiente/heuristicas/templatesefuncoes/execucaoassincrona/v1/RecebeRespostaExercicioController.java
