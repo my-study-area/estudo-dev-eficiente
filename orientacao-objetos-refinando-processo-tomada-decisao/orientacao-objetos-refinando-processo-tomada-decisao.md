@@ -604,3 +604,12 @@ Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master
 
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-templates-funcoes-execucao-assincrona/src/main/java/com/deveficiente/heuristicas/templatesefuncoes/execucaoassincrona/v1/RecebeRespostaExercicioController.java
+
+
+## Heurística #5 Identificando oportunidades de aplicação de funções para construir templates de código: Desafio surpresa
+Agora, vou deixar mais um desafio para você. Não é anormal existir um controle de perfil para acessar determinadas funcionalidades. De vez em quando você precisa ser admin, de vez em quando precisa ter direito sobre o recurso etc. Será que você consegue criar essa situação na sua mente e implementar um código inspirado nesta heurística para controlar acesso a funcionalidades?
+
+Dica: Para este desafio você provavelmente vai trabalhar com encadeamento de chamadas de funções que tem responsabilidades bem definidas. 
+
+> Aqui fiquei confuso sobre a atividade, vou aguardar um explicação ou reformulação do curso.
+
