@@ -613,3 +613,13 @@ Dica: Para este desafio você provavelmente vai trabalhar com encadeamento de ch
 
 > Aqui fiquei confuso sobre a atividade, vou aguardar um explicação ou reformulação do curso.
 
+
+## Heurística #6 Enums mais ricas: Explicação e exemplo
+Enum no java é semelhante a uma classe podendo conter constantes, construtor e métodos.
+
+Gerado por IA:
+
+chamada "Enums mais ricas", foca em como aproveitar ao máximo os tipos enumerados (enums) na linguagem Java, indo além de uma simples lista de constantes para incorporar comportamento e lógica diretamente às constantes da enum. Esta heurística é apresentada em contraste com a funcionalidade de enums em outras linguagens e culmina na aplicação da Heurística da Coesão Básica para melhorar a manutenibilidade e extensibilidade do código
+
+
+Exemplo de commit com refatoração e uso avançado de Enums explicado na aula: https://github.com/forks-projects/poc-plugin-cdd/commit/c83b1be8501dd5cc9d457c9300d17e49a1b133f5
