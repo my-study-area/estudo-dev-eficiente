@@ -623,3 +623,10 @@ chamada "Enums mais ricas", foca em como aproveitar ao máximo os tipos enumerad
 
 
 Exemplo de commit com refatoração e uso avançado de Enums explicado na aula: https://github.com/forks-projects/poc-plugin-cdd/commit/c83b1be8501dd5cc9d457c9300d17e49a1b133f5
+
+
+## Heurística #6 Enums mais ricas: Primeiro desafio
+
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/enumsricas/status/v1/Inscricao.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desasfio-enumsricas-calculoprogresso/src/main/java/com/deveficiente/heuristicas/enumsricas/status/v1/Inscricao.java
