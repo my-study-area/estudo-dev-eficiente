@@ -14,6 +14,10 @@ public class Treinamento {
 		this.atividades = atividades;
 	}
 
+	public int getQuantidadeAtividades() {
+		return atividades.size();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

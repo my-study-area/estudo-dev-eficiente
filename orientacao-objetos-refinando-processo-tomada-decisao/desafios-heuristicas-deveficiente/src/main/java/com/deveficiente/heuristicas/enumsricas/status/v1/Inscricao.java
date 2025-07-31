@@ -1,5 +1,8 @@
 package com.deveficiente.heuristicas.enumsricas.status.v1;
 
+import org.springframework.util.Assert;
+
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,11 @@ public class Inscricao {
 		super();
 		this.aluno = aluno;
 		this.treinamento = treinamento;
+	}
+
+	public void adicionaResposta(@NotNull Resposta resposta) {
+		Assert.notNull(resposta, "Resposta deve existir");
+		this.respostas.add(resposta);
 	}
 
 	@Override
@@ -58,8 +66,16 @@ public class Inscricao {
 		 * 
 		 * Como você vai resolver isso aqui?
 		 */
+		int totalAtividades = this.treinamento.getQuantidadeAtividades();
+		int quantidadeRespostas = this.respostas.size();
 
-		return StatusProgresso.NAO_INICIADO;
+		if(quantidadeRespostas == 0) {
+			return StatusProgresso.NAO_INICIADO;
+		} else if (quantidadeRespostas <  totalAtividades) {
+			return StatusProgresso.INICIADO;
+		}
+
+		return StatusProgresso.FINALIZADO;
 	}
 
 	public static void main(String[] args) {
@@ -67,16 +83,30 @@ public class Inscricao {
 		Atividade atividade2 = new Atividade("atividade 2");
 		Atividade atividade3 = new Atividade("atividade 3");
 
-		Treinamento treinamento = new Treinamento("titulo",
-				List.of(atividade1, atividade2, atividade3));
-		
+		Treinamento treinamento = new Treinamento("titulo", List.of(atividade1, atividade2, atividade3));
+		Treinamento treinamento2 = new Treinamento("treinamento 2", List.of(atividade1, atividade2));
+		Treinamento treinamento3 = new Treinamento("treinamento 3", List.of(atividade3));
+
 		Aluno aluno = new Aluno("pessoa@deveficiente.com");
 
 		Inscricao inscricao = new Inscricao(aluno,treinamento);
-		
+		Inscricao inscricao2 = new Inscricao(aluno,treinamento2);
+		Inscricao inscricao3 = new Inscricao(aluno,treinamento3);
+
 		//faça o código para adicionar uma resposta numa inscricao
+		Resposta resposta1 = new Resposta(inscricao, atividade1);
+		Resposta resposta2 = new Resposta(inscricao, atividade2);
+		Resposta resposta3 = new Resposta(inscricao, atividade3);
+
+		inscricao.adicionaResposta(resposta1);
+		inscricao.adicionaResposta(resposta2);
+		inscricao.adicionaResposta(resposta3);
+
+		inscricao2.adicionaResposta(resposta1);
 
 		System.out.println(inscricao.calculaProgresso());
+		System.out.println(inscricao2.calculaProgresso());
+		System.out.println(inscricao3.calculaProgresso());
 	}
 
 }
