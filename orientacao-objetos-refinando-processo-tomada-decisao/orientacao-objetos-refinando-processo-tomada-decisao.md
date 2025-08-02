@@ -665,3 +665,62 @@ Você pode reaproveitar o código usado em desafios anteriores relacionados à a
 Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/enumsricas/tipoatividade/v1/Treinamento.java
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desafio-enumsricas-tipoatividade/src/main/java/com/deveficiente/heuristicas/enumsricas/tipoatividade/v1/Treinamento.java
+
+## Heurística #7 Identificação da oportunidade para inverter dependências: Explicação e exemplo
+Problema: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/99a214063a3df6965708a9d95169e3a19df643f4/src/main/java/com/deveficiente/heuristicas/inverterdependencia/criacaosecoesatividades/v1/SecaoAtividades.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-invertendo-dependencias-busca-proxima-atividade/src/main/java/com/deveficiente/heuristicas/inverterdependencia/criacaosecoesatividades/v1/SecaoAtividades.java
+
+Documento de Resumo gerado por IA:
+
+Este documento analisa a Heurística 7, "Inversão de Dependências: Uma Heurística para Otimizar o Código", abordando os principais temas, ideias e fatos apresentados, com citações relevantes dos trechos fornecidos.
+
+
+### 1. Inversão de Dependências como Ferramenta Estratégica
+A **Heurística 7** introduz a **Inversão de Dependências**, o "D" do SOLID, como uma ferramenta fundamental para desenvolvedores. O objetivo não é aplicar a inversão por padrão, mas sim "despertar em você a percepção de quando aplicar a inversão de dependência de ter isso na sua caixa de ferramenta". O desenvolvedor deve perceber o padrão e saber como agir.
+
+* **Aplicabilidade Estratégica**: A Heurística 7 não prega a divisão em camadas por padrão. A estrutura do software, incluindo a aplicação da Inversão de Dependências, deve ser guiada pela "necessidade do negócio".
+* **Flexibilidade**: A solução de software deve ser "tão flexível Quanto o negócio pede para ser naquele determinado momento com as variáveis que nós temos naquele instante". Isso sugere postergar decisões e lidar com a incerteza, especialmente em relação à infraestrutura.
+
+
+### 2. O Problema do Acoplamento Indesejado
+O autor ilustra a necessidade da inversão de dependências com um cenário real: a criação de sessões de treinamento com atividades. Inicialmente, o sistema usava um `Nova Sessão Request` para receber parâmetros via web, o que gerava um acoplamento problemático.
+
+* **Acoplamento Indevido**: Camadas de "core da aplicação" ou "domínio" não deveriam ter conhecimento das camadas superiores (web, requisições). No exemplo, o método `setAtividades` recebia classes como `Nova Teoria Request`, "intimamente relacionada com o jeito que eu recebo uma requisição que vem ali da web".
+* **Consequências de Mudança**: "Se você muda isso talvez interfira na camada debaixo do software que é mais pronúcleo do software". Uma alteração na forma de receber dados (de web para fila, por exemplo) impactaria o core do sistema.
+* **Reaproveitamento Incorreto**: Reutilizar a classe `Nova Sessão Request`, que nasceu para receber parâmetros de um controle web, para outros tipos de entrada (como importação via Markdown) seria "semanticamente falando não faria sentido". Isso cria um "acoplamento de duas classes que não nasci a classe da request não nasceu para ser reaproveitada em nenhum outro lugar".
+
+
+### 3. O Gatilho para a Inversão de Dependências
+A necessidade de suportar múltiplas formas de entrada de dados (requisição web e importação via Markdown) sem impactar o core do sistema serviu como o gatilho para a aplicação da heurística.
+
+> "Se a camada de baixo tá conversando com a camada de cima e você percebe agora que você vai ter múltiplas entradas de dados que você começou a alterar a camada de cima você não quer que isso... gere Impacto aqui nessa classe você tem um gatilho pronto para inverter a dependência".
+
+
+### 4. A Solução: Inversão de Dependências via Polimorfismo
+A inversão de dependências é apresentada como a solução para o problema de acoplamento, permitindo que as camadas superiores sejam utilizadas pelas camadas inferiores sem violar a relação de dependência.
+
+* **Interfaces no Core**: A solução envolve a criação de interfaces (ex: `Produtor Nova Teoria`, `Produtor Nova Atividade`) que residem na camada de core/domínio. "Essa interface a interface que tá conectada no Core aí do sistema eu não sei mais quem é o produtor de Nova teoria ou produtor de Nova atividade".
+* **Polimorfismo**: A inversão de dependência é fazer "com que uma classe da camada de cima possa ser utilizada na camada de baixo sem quebrar a relação de camadas então geralmente isso é feito através de polimorfismo".
+* **Implementação por Camadas Superiores**: Classes das camadas superiores (ex: `Nova Teoria Request`, `Nova Teoria Markdown`) implementam essas interfaces do core. "Eu faço com que a minha teoria request implemente esta interface e agora aqui tá de boa do mesmo jeito que eu faço com meu nova teoria Mark e tal com que implemente essa interface".
+* **Desacoplamento**: O core agora depende de uma abstração (a interface) e não de uma implementação concreta de uma camada superior. Isso permite que diferentes fontes de dados (request, markdown, etc.) sejam "pluggadas" no sistema sem modificar o core.
+
+
+### 5. Considerações sobre Linguagens e Abstrações
+O autor discute como a inversão de dependências pode ser implementada em diferentes paradigmas e linguagens de programação.
+
+* **Linguagens Compiladas (Java, TypeScript)**: O uso de interfaces é o caminho natural, garantindo contratos e detecção de erros em tempo de compilação.
+* **Linguagens Dinâmicas (JavaScript, Ruby, Python)**: O conceito de interfaces pode não se aplicar diretamente. A inversão pode ser alcançada através da passagem de funções como argumentos ou verificações de comportamento em tempo de execução (duck typing). "Você poderia receber aqui por exemplo uma função como argumento que é uma função que gera uma nova atividade uma nova teoria".
+* **Verificações em Linguagens Dinâmicas**: O autor defende a verificação de parâmetros no início da função em linguagens dinâmicas: "Eu particularmente sou a favor de fazer verificações no início da função que recebe os parâmetros se aquela se aquela função Ou aquele objeto que você não sabe o tipo responde para que para aquele conjunto de parâmetros que você quer passar".
+
+
+
+### 6. Alternativas e Preferências do Autor
+O autor menciona uma alternativa à inversão de dependências via interfaces, mas expressa sua preferência pessoal.
+
+* **Alternativa (Menos Usada)**: Criar classes de dados de domínio específicas (`Dados de Nova Teoria`) e realizar conversões entre `Teoria Markdown` e `Dados de Nova Teoria`, e `Teoria Request` e `Dados de Nova Teoria`.
+* **Razão da Preferência**: A abordagem com interfaces é considerada mais eficiente. A alternativa "atinge o mesmo resultado com mais trabalho", pois exigiria "criar classe fazer o código que converte E por aí vai enquanto que aqui não precisa fazer código que já existe e implementar a interfase".
+
+
+### Conclusão
+A **Heurística 7 de "Inversão de Dependências"** é uma estratégia poderosa para construir software flexível e resiliente a mudanças. Ela deve ser aplicada quando uma camada inferior começa a depender de uma camada superior e a necessidade de múltiplas fontes de dados para o core do sistema surge, exigindo desacoplamento. A implementação geralmente envolve polimorfismo, com interfaces no core que são implementadas pelas camadas externas, permitindo que o core "enxergue" a abstração, e não a implementação concreta da camada superior. A decisão de aplicá-la deve ser estratégica, baseada na necessidade do negócio, e não como um padrão rígido desde o início do desenvolvimento.
