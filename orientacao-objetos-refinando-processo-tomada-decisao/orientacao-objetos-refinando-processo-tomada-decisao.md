@@ -724,3 +724,54 @@ O autor menciona uma alternativa à inversão de dependências via interfaces, m
 
 ### Conclusão
 A **Heurística 7 de "Inversão de Dependências"** é uma estratégia poderosa para construir software flexível e resiliente a mudanças. Ela deve ser aplicada quando uma camada inferior começa a depender de uma camada superior e a necessidade de múltiplas fontes de dados para o core do sistema surge, exigindo desacoplamento. A implementação geralmente envolve polimorfismo, com interfaces no core que são implementadas pelas camadas externas, permitindo que o core "enxergue" a abstração, e não a implementação concreta da camada superior. A decisão de aplicá-la deve ser estratégica, baseada na necessidade do negócio, e não como um padrão rígido desde o início do desenvolvimento.
+
+
+## Heurística #7 Identificação da oportunidade para inverter dependências: Desafio
+
+### Descrição do desafio
+Gerado por IA:
+
+Com base na sua transcrição, elaborei a seguinte descrição de atividade (desafio) para um treinamento de orientação a objetos.
+
+
+**Desafio de Inversão de Dependências: Encontrando a Próxima Atividade**
+
+**Contexto:**
+
+Você está trabalhando em um sistema de plataforma de treinamento que gerencia sessões de atividades para milhares de alunos. A sua tarefa é desenvolver uma lógica eficiente para identificar a próxima atividade que um aluno específico precisa responder.
+
+**Descrição da Estrutura Atual:**
+
+* Existe uma classe `SessaoDeAtividades` que contém um título e uma lista de `Atividade`.
+* A classe `Atividade` possui uma ordem e armazena todas as `Resposta` que recebeu, independente de qual aluno a enviou.
+* Um `RepositorioDeAtividades` foi fornecido para que você possa adicionar e gerenciar as atividades do sistema.
+
+**O Problema (e o Desafio!):**
+
+A abordagem atual tem um problema de desempenho crítico que você precisa resolver.
+
+A lógica para encontrar a próxima atividade de um aluno funciona da seguinte forma:
+1.  O sistema recebe um `Aluno` e uma `SessaoDeAtividades` como argumentos.
+2.  Para cada `Atividade` na sessão, o sistema verifica se o `Aluno` já respondeu.
+3.  Essa verificação é feita buscando a resposta do aluno na lista de respostas da `Atividade`.
+
+Em um sistema com milhares de alunos, essa verificação se torna um gargalo de performance. Uma única atividade pode ter uma lista de respostas com milhares de itens, e o sistema teria que percorrer essa lista repetidamente para cada aluno, o que poderia levar a tempos de execução inaceitáveis.
+
+**Seu Objetivo:**
+
+Seu desafio é reestruturar o código para inverter essa dependência. Em vez de a `Atividade` ter a responsabilidade de verificar se um aluno respondeu, a responsabilidade deve ser transferida para um local que não penalize a performance do sistema. Você pode alterar a assinatura dos métodos e a estrutura das classes se necessário.
+
+**Requisitos:**
+
+* Crie a lógica para encontrar a próxima `Atividade` que um `Aluno` precisa responder em uma `SessaoDeAtividades`.
+* A nova implementação deve ser performática e escalável para lidar com milhares de alunos.
+* Você não pode carregar todos os objetos para a memória de uma só vez para fazer a busca.
+* **Atenção:** Este desafio não é fácil. Ele exigirá que você aplique a heurística de **Inversão de Dependência** e provavelmente outras heurísticas que você já estudou.
+
+Este desafio é uma oportunidade de pensar em como a estrutura de dados e a responsabilidade das classes podem impactar a performance de um sistema em larga escala. Boa sorte!
+
+### Código fonte
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/inverterdependencia/respostasaluno/v1/SecaoAtividades.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-invertendo-dependencias-busca-proxima-atividade/src/main/java/com/deveficiente/heuristicas/inverterdependencia/respostasaluno/v1/SecaoAtividades.java
+

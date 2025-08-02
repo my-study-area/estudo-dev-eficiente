@@ -11,6 +11,10 @@ public class Resposta {
 		this.aluno = aluno;
 	}
 
+	public boolean pertenceA(Aluno aluno) {
+		return this.aluno.equals(aluno);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,5 +1,6 @@
 package com.deveficiente.heuristicas.inverterdependencia.respostasaluno.v2;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,16 @@ public class Atividade implements Comparable<Atividade> {
 
 	public void adicionaResposta(Resposta resposta) {
 		this.respostas.add(resposta);
+	}
+
+	public List<Resposta> getRespostasPorAluno(Aluno aluno) {
+		List<Resposta> respostasAluno = new ArrayList<>();
+		for (Resposta resposta : respostas) {
+            if (resposta.pertenceA(aluno)) {
+				respostasAluno.add(resposta);
+            }
+		}
+		return respostasAluno;
 	}
 
 	@Override
@@ -57,4 +68,8 @@ public class Atividade implements Comparable<Atividade> {
 		return "Atividade [titulo=" + titulo + ", ordem=" + ordem + "]";
 	}
 
+
+	public boolean foiRespondida(Aluno aluno) {
+		return this.respostas.stream().anyMatch(resposta -> resposta.pertenceA(aluno));
+	}
 }

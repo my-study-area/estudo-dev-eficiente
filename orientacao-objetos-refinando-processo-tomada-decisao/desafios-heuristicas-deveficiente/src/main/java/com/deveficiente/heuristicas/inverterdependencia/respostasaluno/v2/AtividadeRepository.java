@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class AtividadeRepository implements CrudRepository<Atividade, Long>{
+public class AtividadeRepository implements CrudRepository<Atividade, Long>, AtividadesRespondidas {
 	
 	private List<Atividade> atividades = new ArrayList<>();
 
@@ -17,6 +17,18 @@ public class AtividadeRepository implements CrudRepository<Atividade, Long>{
 		this.atividades.add(entity);
 		return entity;
 	}
+
+	public List<Atividade> buscarAtividadesRespondidasPorAlunoNumaSecaoAtividade(Aluno aluno, SecaoAtividades secaoAtividades) {
+		ArrayList<Atividade> atividadesDoAluno = new ArrayList<>();
+		for (Atividade atividade : secaoAtividades.getAtividades()) {
+			List<Resposta> respostasPorAluno = atividade.getRespostasPorAluno(aluno);
+            if (!respostasPorAluno.isEmpty()) {
+                atividadesDoAluno.add(atividade);
+            }
+		}
+		return atividadesDoAluno;
+	}
+
 
 	@Override
 	public <S extends Atividade> Iterable<S> saveAll(Iterable<S> entities) {

@@ -16,8 +16,12 @@ public class SecaoAtividades {
 		this.titulo = titulo;
 		novasAtividades.stream().forEach(this.atividades :: add);
 	}
-	
-	public Optional<Atividade> proximaAtividadeASerRespondidaPeloAluno(Aluno aluno){
+
+	public SortedSet<Atividade> getAtividades() {
+		return atividades;
+	}
+
+	public Optional<Atividade> proximaAtividadeASerRespondidaPeloAluno(Aluno aluno, AtividadesRespondidas atividadeRepository){
 		/*
 		 * Aqui você tem um potencial problema... Pode ser que tenha milhares de pessoas
 		 * alunas e que elas respondam um monte de atividade. Preciso que você leve isso em
@@ -28,6 +32,16 @@ public class SecaoAtividades {
 		 * 
 		 * 
 		 */
+
+		List<Atividade> atividadesRespondidas = atividadeRepository
+				.buscarAtividadesRespondidasPorAlunoNumaSecaoAtividade(aluno, this);
+
+		for (Atividade atividade : atividades) {
+            if (atividadesRespondidas.contains(atividade)) {
+                continue;
+            }
+			return Optional.of(atividade);
+		}
 		return Optional.empty();
 	}
 	
@@ -35,28 +49,31 @@ public class SecaoAtividades {
 		Aluno aluno1 = new Aluno("aluno1@email.com");
 		Aluno aluno2 = new Aluno("aluno2@email.com");
 		AtividadeRepository atividadeRepository = new AtividadeRepository();
-		
 		List<Atividade> atividades = new ArrayList<>();
+
 		Atividade atividade1 = new Atividade("t1", 0);
-		atividadeRepository.save(atividade1);
-		atividades.add(atividade1);
-		atividade1.adicionaResposta(new Resposta(atividade1, aluno1));
-		atividade1.adicionaResposta(new Resposta(atividade1, aluno2));
-		
 		Atividade atividade2 = new Atividade("t2", 1);
-		atividadeRepository.save(atividade2);
-		atividade2.adicionaResposta(new Resposta(atividade2, aluno1));
-		atividades.add(atividade2);
-		
-		
 		Atividade atividade3 = new Atividade("t3", 2);
+		atividadeRepository.save(atividade1);
+		atividadeRepository.save(atividade2);
 		atividadeRepository.save(atividade3);
+
+		atividades.add(atividade1);
+		atividades.add(atividade2);
 		atividades.add(atividade3);
-		
-		
+
+		atividade1.adicionaResposta(new Resposta(atividade1, aluno1));
+		atividade2.adicionaResposta(new Resposta(atividade2, aluno1));
+
+		atividade1.adicionaResposta(new Resposta(atividade1, aluno2));
+
 		SecaoAtividades secaoAtividades = new SecaoAtividades("titulo", atividades);
-		Optional<Atividade> proxima = secaoAtividades.proximaAtividadeASerRespondidaPeloAluno(aluno1);
-		System.out.println(proxima);		
+		Optional<Atividade> proximaAluno1 = secaoAtividades.proximaAtividadeASerRespondidaPeloAluno(aluno1, atividadeRepository);
+		System.out.println(proximaAluno1);
+
+		Optional<Atividade> proximaAluno2 = secaoAtividades.proximaAtividadeASerRespondidaPeloAluno(aluno2, atividadeRepository);
+		System.out.println(proximaAluno2);
 	}
+
 
 }
