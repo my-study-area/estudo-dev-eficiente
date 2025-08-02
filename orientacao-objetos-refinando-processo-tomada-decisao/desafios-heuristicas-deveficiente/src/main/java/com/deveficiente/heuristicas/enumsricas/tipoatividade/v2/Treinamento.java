@@ -10,27 +10,29 @@ public class Treinamento {
 
 	private String titulo;
 	private SortedSet<SecaoAtividades> secoes = new TreeSet<>();
+	private ColecaoSecoesAtividades colecaoSecoesAtividades;
 
 	public Treinamento(String titulo, List<SecaoAtividades> secoes) {
 		super();
 		this.titulo = titulo;
 		secoes.forEach(this.secoes :: add);
+		colecaoSecoesAtividades = new ColecaoSecoesAtividades(secoes);
 	}
 	
 	public int calculaQuantidadeAtividadesObrigatorias() {
-		return 0;
+		return colecaoSecoesAtividades.calculaQuantidadeAtividadesObrigatorias();
 	}
 	
 	public int calculaQuantasObrigatoriasForamFinalizadas(Aluno aluno) {
-		return 0;
+		return colecaoSecoesAtividades.calculaQuantasObrigatoriasForamFinalizadas(aluno);
 	}
 	
 	public int calculaQuantidadeAtividadesNaoObrigatorias() {
-		return 0;
+		return colecaoSecoesAtividades.calculaQuantidadeAtividadesNaoObrigatorias();
 	}
 	
 	public BigDecimal calculaPercentualDeAtividadesObrigatorias() {
-		return BigDecimal.ZERO;
+		return colecaoSecoesAtividades.calculaPercentualDeAtividadesObrigatorias();
 	}
 	
 	public static void main(String[] args) {
@@ -49,24 +51,29 @@ public class Treinamento {
 		atividadeRepository.save(atividade2);
 		atividade2.adicionaResposta(new Resposta(atividade2, aluno1));
 		atividades.add(atividade2);
-		
-		
+
+
 		Atividade atividade3 = new Atividade("t3", 2, TipoAtividade.CONVENCIONAL);
 		atividadeRepository.save(atividade3);
+		atividade3.adicionaResposta(new Resposta(atividade3, aluno1));
 		atividades.add(atividade3);
-		
-		
+
+
 		SecaoAtividades secaoAtividades = new SecaoAtividades("titulo",1,atividades);
 
 		Treinamento treinamento = new Treinamento("titulo do treinamento", List.of(secaoAtividades));
 
+		System.out.println("Qtd total de atividades: " + treinamento.getQuantidadeTotalAtividades());
 		System.out.println("Qtd atividades obrigatórias: " + treinamento.calculaQuantidadeAtividadesObrigatorias());
-		System.out.println("Qtd obrigatórias finalizadas peloa aluno1: " + treinamento.calculaQuantasObrigatoriasForamFinalizadas(aluno1));
-		System.out.println("Qtd obrigatórias finalizadas peloa aluno2: " + treinamento.calculaQuantasObrigatoriasForamFinalizadas(aluno2));
+		System.out.println("Qtd obrigatórias finalizadas pelo aluno1: " + treinamento.calculaQuantasObrigatoriasForamFinalizadas(aluno1));
+		System.out.println("Qtd obrigatórias finalizadas pelo aluno2: " + treinamento.calculaQuantasObrigatoriasForamFinalizadas(aluno2));
 		System.out.println("Qtd atividades NÃO OBRIGATÓRIAS: " + treinamento.calculaQuantidadeAtividadesNaoObrigatorias());
 		System.out.println("Percentual de obrigatórias: " + treinamento.calculaPercentualDeAtividadesObrigatorias());
 	}
-	
-	
+
+	private int getQuantidadeTotalAtividades() {
+		return this.colecaoSecoesAtividades.getTotalAtividades();
+	}
+
 
 }

@@ -16,7 +16,11 @@ public class SecaoAtividades implements Comparable<SecaoAtividades>{
 		this.ordem = ordem;
 		novasAtividades.stream().forEach(this.atividades :: add);
 	}
-	
+
+	public SortedSet<Atividade> getAtividades() {
+		return atividades;
+	}
+
 	@Override
 	public int compareTo(SecaoAtividades outra) {
 		return this.ordem - outra.ordem;

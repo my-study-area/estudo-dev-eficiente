@@ -43,4 +43,7 @@ public class Resposta {
 		return true;
 	}
 
+	public boolean pertenceAoAluno(Aluno aluno) {
+		return this.aluno.equals(aluno);
+	}
 }

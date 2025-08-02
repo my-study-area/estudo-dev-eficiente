@@ -1,9 +1,5 @@
 package com.deveficiente.heuristicas.enumsricas.tipoatividade.v2;
 
-import com.deveficiente.heuristicas.colecoescommuitaresponsabilidade.atividadesobrigatoriasconcluidas.v2.Aluno;
-import com.deveficiente.heuristicas.colecoescommuitaresponsabilidade.atividadesobrigatoriasconcluidas.v2.Atividade;
-import com.deveficiente.heuristicas.colecoescommuitaresponsabilidade.atividadesobrigatoriasconcluidas.v2.Resposta;
-import com.deveficiente.heuristicas.colecoescommuitaresponsabilidade.atividadesobrigatoriasconcluidas.v2.SecaoAtividades;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,7 +12,7 @@ public class ColecaoSecoesAtividades {
     private List<SecaoAtividades> secoes;
     private BigDecimal PERCENTUAL_MULTIPLICACAO = new BigDecimal(100);
 
-    public ColecaoSecoesAtividades(List<SecaoAtividades> secoes) {
+    public ColecaoSecoesAtividades(List<com.deveficiente.heuristicas.enumsricas.tipoatividade.v2.SecaoAtividades> secoes) {
         this.secoes = secoes;
     }
 
@@ -37,11 +33,16 @@ public class ColecaoSecoesAtividades {
         return getAtividadesObrigatorias().size();
     }
 
+    public int calculaQuantidadeAtividadesNaoObrigatorias() {
+        return getTotalAtividades() - calculaQuantidadeAtividadesObrigatorias();
+    }
+
     public SortedSet<Atividade> getAtividadesObrigatorias() {
         SortedSet<Atividade> atividadesObrigatorias = new TreeSet<>();
         for (Atividade atividade : getTodasAtividades()) {
-            if (atividade.isOpcional()) continue;
-            atividadesObrigatorias.add(atividade);
+            if (atividade.isObrigatoria()) {
+                atividadesObrigatorias.add(atividade);
+            }
         }
         return atividadesObrigatorias;
     }

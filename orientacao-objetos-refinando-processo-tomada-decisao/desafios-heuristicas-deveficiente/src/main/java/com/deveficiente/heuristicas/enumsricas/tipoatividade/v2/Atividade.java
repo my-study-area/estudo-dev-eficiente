@@ -59,4 +59,12 @@ public class Atividade implements Comparable<Atividade> {
 		return "Atividade [titulo=" + titulo + ", ordem=" + ordem + "]";
 	}
 
+	public boolean isObrigatoria() {
+		return tipoAtividade.isObrigatoria();
+	}
+
+
+	public List<Resposta> getRespostas() {
+		return respostas;
+	}
 }

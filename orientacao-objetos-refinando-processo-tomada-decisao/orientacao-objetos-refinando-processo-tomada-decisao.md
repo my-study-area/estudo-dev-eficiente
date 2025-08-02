@@ -630,3 +630,38 @@ Exemplo de commit com refatoração e uso avançado de Enums explicado na aula: 
 Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/enumsricas/status/v1/Inscricao.java
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desasfio-enumsricas-calculoprogresso/src/main/java/com/deveficiente/heuristicas/enumsricas/status/v1/Inscricao.java
+
+
+
+## Heurística #6 Enums mais ricas: Segundo desafio
+### Desafio
+📚 **Contexto**  
+Este desafio faz parte de um conjunto de exercícios voltados para análise de dados em ambientes de treinamento, inspirado no modelo instrucional **Four Component Instructional Design (4C/ID)**. Nele, as atividades são classificadas por tipo, e o objetivo é identificar quais são obrigatórias com base em regras semânticas do design.
+
+#### 🎯 Objetivo do Desafio
+
+Você deve criar uma solução capaz de **analisar atividades de treinamento** e gerar os seguintes indicadores:
+
+- ✅ **Quantidade de atividades obrigatórias**  
+- ❎ **Quantidade de atividades não obrigatórias**  
+- 🏁 **Quantidade de atividades obrigatórias finalizadas**  
+- 📊 **Percentual de atividades obrigatórias no total de atividades**  
+- 📉 **Percentual de atividades não obrigatórias no total**
+
+
+#### 📌 Regras de Negócio
+- Existem **3 tipos de atividade**:  
+  - **Convencional** → **Obrigatória**  
+  - **Imitação** → **Não obrigatória**  
+  - **Exemplo** → **Não obrigatória**
+
+- A obrigatoriedade **não vem marcada diretamente**, mas deve ser **inferida** pelo tipo da atividade.
+
+#### 🔧 Sugestão Técnica
+Você pode reaproveitar o código usado em desafios anteriores relacionados à análise heurística de coleções e classes, adaptando apenas a forma como a obrigatoriedade é definida (agora baseada no tipo “convencional”).
+
+
+### Conteúdo
+Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master/src/main/java/com/deveficiente/heuristicas/enumsricas/tipoatividade/v1/Treinamento.java
+
+Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-desafio-enumsricas-tipoatividade/src/main/java/com/deveficiente/heuristicas/enumsricas/tipoatividade/v1/Treinamento.java
