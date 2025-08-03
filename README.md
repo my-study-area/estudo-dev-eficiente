@@ -54,6 +54,10 @@ Repositórios: https://github.com/asouza?tab=repositories
 - [Engenharia de Requisitos para Devs](./desenvolvimento-seguro-software.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/beoReo)
 
+### Curso: Orientação a Objetos: Refinando seu Processo de Tomada de Decisão
+- [Orientação a Objetos: Refinando seu Processo de Tomada de Decisão](./orientacao-objetos-refinando-processo-tomada-decisao/orientacao-objetos-refinando-processo-tomada-decisao.md)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/Q5Od1Z)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
