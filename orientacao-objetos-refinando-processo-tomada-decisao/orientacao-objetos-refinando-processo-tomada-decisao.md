@@ -775,3 +775,11 @@ Desafio: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/master
 
 Solução: https://github.com/asouza/desafios-heuristicas-deveficiente/blob/solucao-invertendo-dependencias-busca-proxima-atividade/src/main/java/com/deveficiente/heuristicas/inverterdependencia/respostasaluno/v1/SecaoAtividades.java
 
+
+## O CDD pode te ajudar a criar heurísticas para controlar a complexidade do código
+Aula fala sobre a análise do uso das heurísticas em conjunto do CDD.
+
+## Um pouco mais sobre acoplamento mental e self testing
+Durante o módulo falamos do tal do acoplamento mental. Ele se apresenta principalmente quando construímos uma API e também construímos o ponto do código que a chama. Existe uma chance de acharmos que tudo sempre vai dar certo e isso faz com que nosso código seja um pouco menos confiável, já que ao invés de estar preparado para problemas ele assume que tudo vai ficar bem.
+
+Anotações sobre assunto no curso [Testes automatizados revelando bugs](../testes-automatizados-revelando-bugs.md#técnica-4-self-testing)
