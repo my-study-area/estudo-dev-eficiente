@@ -61,3 +61,8 @@ Repositórios: https://github.com/asouza?tab=repositories
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
+- [desafio-3: Implementando um serviço de pagamento](./desafios/desafio-3-implementando-servico-pagamento/desafio3-sistema-pagamento/)
+
+
+https://github.com/forks-projects/seed-desafio-sistema-pagamento
+
