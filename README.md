@@ -58,10 +58,14 @@ Repositórios: https://github.com/asouza?tab=repositories
 - [Orientação a Objetos: Refinando seu Processo de Tomada de Decisão](./orientacao-objetos-refinando-processo-tomada-decisao/orientacao-objetos-refinando-processo-tomada-decisao.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/Q5Od1Z)
 
+### Curso: Domain Driven Design: As partes que realmente importam
+- [Domain Driven Design: As partes que realmente importam](./domain-driven-design-as-partes-que-realmente-importam/domain-driven-design-as-partes-que-realmente-importam.md)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/xOnnnA)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
-- [desafio-3: Implementando um serviço de pagamento](./desafios/desafio-3-implementando-servico-pagamento/desafio3-sistema-pagamento/)
+- [desafio-3: Implementando um serviço de pagamento](./desafios/desafio-3-implementando-servico-pagamento/desafio3-sistema-pagamento/) - não finalizado
 
 
 https://github.com/forks-projects/seed-desafio-sistema-pagamento
