@@ -8,8 +8,8 @@ import com.deveficiente.casadocodigov2.compartilhado.UniqueValue;
 public class NovaCategoriaRequest {
 
 	@NotBlank
-	//@UniqueValue(domainClass = Categoria.class, fieldName = "nome")
-	@Documento
+	@UniqueValue(domainClass = Categoria.class, fieldName = "nome")
+//	@Documento
 	private String nome;
 
 	public void setNome(String nome) {
