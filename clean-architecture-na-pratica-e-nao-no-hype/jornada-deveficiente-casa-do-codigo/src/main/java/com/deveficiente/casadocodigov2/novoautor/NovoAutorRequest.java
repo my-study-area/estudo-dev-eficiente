@@ -5,8 +5,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.deveficiente.casadocodigov2.compartilhado.UniqueValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NovoAutorRequest {
+public class NovoAutorRequest implements DadosNovoAutor {
 
 	@NotBlank
 	private String nome;
@@ -18,15 +20,17 @@ public class NovoAutorRequest {
 	@Size(max = 400)
 	private String descricao;
 
-	public NovoAutorRequest(@NotBlank String nome,
-			@NotBlank @Email String email,
-			@NotBlank @Size(max = 400) String descricao) {
-		super();
+	@JsonCreator
+	public NovoAutorRequest(
+			@JsonProperty("nome") @NotBlank String nome,
+			@JsonProperty("email") @NotBlank @Email String email,
+			@JsonProperty("descricao") @NotBlank @Size(max = 400) String descricao) {
 		this.nome = nome;
 		this.email = email;
 		this.descricao = descricao;
 	}
 
+	@Override
 	public Autor toModel() {
 		return new Autor(this.nome,this.email,this.descricao);
 	}
