@@ -144,3 +144,54 @@ Análise da funcionalidade pelo olhar das regras da arquitetura em camadas descr
 - Independent of Database - Não (depende da JPA)
 - Independent of any external agency - Não (depende do banco de dados, dado que está acoplada a JPA)
 
+---
+> Resumo gerado por IA:
+Este resumo foi elaborado para facilitar a compreensão dos conceitos de **Clean Architecture** (Arquitetura Limpa), conectando a teoria do blog de Uncle Bob com a prática de refatoração apresentada na transcrição da aula.
+
+
+### 1. Análise da Teoria: O que diz o Blog de Uncle Bob
+
+A Clean Architecture propõe a divisão do software em camadas concêntricas. O objetivo principal é criar sistemas que sejam:
+
+* **Independentes de Frameworks:** O núcleo do seu sistema não deve depender de bibliotecas como Spring ou Hibernate.
+* **Testáveis:** Você deve conseguir testar as regras de negócio sem precisar de um banco de dados ou servidor web.
+* **Independentes da Interface de Usuário (UI):** A lógica deve ser a mesma, seja a entrada via Web, Console ou App Mobile.
+* **A Regra de Dependência:** Esta é a regra de ouro. **As dependências de código só podem apontar para dentro.** As camadas internas (como as Entidades e Casos de Uso) nunca devem saber nada sobre as camadas externas (como o Banco de Dados ou a Web).
+
+
+
+
+### 2. Contexto da Aula: Aplicando a Teoria na Prática
+
+A transcrição detalha a transformação de um código comum (acoplado) em um código seguindo a Clean Arch. O foco é o **Cadastro de um Novo Autor**.
+
+#### O Problema Inicial
+O código começou com um `Controller` que fazia tudo: recebia os dados da web, falava direto com o banco de dados via JPA e dependia totalmente do framework Spring. Isso viola a regra de que o "núcleo" deve ser isolado.
+
+#### O Passo a Passo da Refatoração
+
+**Passo 1: Tornar o código Testável (Design para Testabilidade)**
+* **O que foi feito:** Substituiu-se a injeção de dependência direta no atributo (com `@Autowired` privado) por um **construtor**.
+* **Por que importa:** Agora você pode criar uma instância da classe manualmente em um teste unitário, passando um "mock" (simulação) do banco de dados, sem precisar subir todo o framework Spring.
+
+**Passo 2: Independência de Banco de Dados**
+* **O que foi feito:** Criação de uma interface de repositório própria do projeto.
+* **Por que importa:** O sistema passa a depender de uma "abstração" que você controla, e não diretamente de uma tecnologia específica (como JPA ou MongoDB).
+
+**Passo 3: Criação do Caso de Uso (Use Case)**
+* **O que foi feito:** Criou-se a classe `CadastroNovoAutor`. Ela representa uma funcionalidade de negócio pura.
+* **Por que importa:** Se amanhã você decidir que o cadastro de autor pode ser feito via terminal ou processamento de arquivo, a lógica já está isolada nesta classe, pronta para ser reutilizada sem depender da Web.
+
+**Passo 4: Inversão de Dependência (A "Cola" entre as camadas)**
+* Este é o ponto mais complexo. O Caso de Uso (camada interna) não pode depender do objeto de "Request" que vem da Web (camada externa).
+* **A solução:** Criou-se uma **Interface** dentro da camada de Caso de Uso. O objeto da Web (o DTO) agora implementa essa interface.
+* **Resultado:** O Caso de Uso agora aponta para uma interface que ele mesmo possui. A regra de dependência foi respeitada (o de fora aponta para dentro).
+
+
+### Exemplo visual das camadas
+1.  **Framework (Azul/Web)** recebe o JSON.
+2.  **Controller (Verde)** transforma o JSON em um objeto que o Use Case entende.
+3.  **Use Case (Rosa)** processa a regra usando a **Entity (Amarelo)**.
+4.  **Use Case (Rosa)** manda salvar através de uma interface (**Gateway**).
+5.  O **Framework (Azul/DB)** executa o SQL no banco.
+
