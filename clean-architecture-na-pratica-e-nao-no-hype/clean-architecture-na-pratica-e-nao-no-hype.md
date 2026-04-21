@@ -195,3 +195,8 @@ O código começou com um `Controller` que fazia tudo: recebia os dados da web, 
 4.  **Use Case (Rosa)** manda salvar através de uma interface (**Gateway**).
 5.  O **Framework (Azul/DB)** executa o SQL no banco.
 
+
+## Refatore o cadastro de nova categoria para seguir a clean arch
+Agora começou o jogo real. Você deve refatorar a funcionalidade de cadastro de nova categoria para buscar os objetivos desejados pela Clean Arch.
+
+Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/464dbe37ee1865083cac7d64516590c9e5418bdf
