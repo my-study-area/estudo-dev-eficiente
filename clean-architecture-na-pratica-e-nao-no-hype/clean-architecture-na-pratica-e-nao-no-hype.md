@@ -200,3 +200,13 @@ O código começou com um `Controller` que fazia tudo: recebia os dados da web, 
 Agora começou o jogo real. Você deve refatorar a funcionalidade de cadastro de nova categoria para buscar os objetivos desejados pela Clean Arch.
 
 Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/464dbe37ee1865083cac7d64516590c9e5418bdf
+
+
+
+## Refatore o detalhe do livro para seguir a Clean Arch
+Quarta refatoração! Espero que tudo seja bem mais fluido e que você até já comece a enxergar oportunidades de uso no seu dia a dia(se for necessário) ou também já se sinta mais preparado(a) para uma próxima entrevista.
+
+Refatore o código relativo a funcionalidade de detalhe de um livro para buscar os objetivos descritos na Clean Arch.
+
+Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/daa7becb9a0e972b901f9238d0bdbd768a1aa43e
+
