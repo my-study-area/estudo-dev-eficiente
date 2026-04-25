@@ -210,3 +210,13 @@ Refatore o código relativo a funcionalidade de detalhe de um livro para buscar 
 
 Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/daa7becb9a0e972b901f9238d0bdbd768a1aa43e
 
+
+
+
+## Refatore a funcionalidade de cadastro de país e estado para seguir a Clean Arch
+Aqui é para ser mamão com açúcar em! Refatoração parecida com as anteriores e é muito esperado que você esteja mais tranquilo(a).
+
+Refatore o código relativo a funcionalidade de cadastros de país e estado para buscar os objetivos descritos na Clean Arch.
+
+
+Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/blob/eeb0430475d199a35e65a519e1c649b725999bbf/src/main/java/com/deveficiente/casadocodigov2/paisestado/CriaEstadoController.java

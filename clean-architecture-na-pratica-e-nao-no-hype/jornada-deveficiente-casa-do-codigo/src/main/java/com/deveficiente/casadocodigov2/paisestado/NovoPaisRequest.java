@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.deveficiente.casadocodigov2.compartilhado.UniqueValue;
 
-public class NovoPaisRequest {
+public class NovoPaisRequest implements DadosNovoPais {
 
 	@NotBlank
 	@UniqueValue(domainClass = Pais.class,fieldName =  "nome")
@@ -16,5 +16,10 @@ public class NovoPaisRequest {
 	
 	public String getNome() {
 		return nome;
+	}
+
+	@Override
+	public Pais toModel() {
+		return new Pais(nome);
 	}
 }
