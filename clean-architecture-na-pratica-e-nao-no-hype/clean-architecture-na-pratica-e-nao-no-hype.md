@@ -196,6 +196,28 @@ O código começou com um `Controller` que fazia tudo: recebia os dados da web, 
 5.  O **Framework (Azul/DB)** executa o SQL no banco.
 
 
+
+### Mapeamento do Contexto: Cadastro de Categoria 📚
+
+| Camada | Componente | Item do Exemplo | O que este arquivo faz? |
+| :--- | :--- | :--- | :--- |
+| **Framework/Drivers** | **Persistence** | `CategoriaRepository` (Impl) | Conversa com o Banco de Dados (Spring Data/JPA). |
+| **Interface Adapters** | **Controller** | `CategoriasController` | Recebe o HTTP e delega a ação. |
+| **Interface Adapters** | **DTO / Request** | `NovaCategoriaRequest` | Valida e transforma o JSON de entrada. |
+| **Use Cases** | **Application Logic** | `CadastroNovaCategoria` | Orquestra o fluxo: "Valide, salve e retorne". |
+| **Entities** | **Domain Model** | `Categoria` | Representa o conceito central e regras de negócio puras. |
+
+Vamos focar no contexto de Categoria - Visualização da Dependência:
+| Item | Camada | Papel |
+| :--- | :--- | :--- |
+| `Categoria` | **Entities** (Amarelo) | Regra de negócio central. |
+| `DadosNovaCategoria` | **Use Cases** (Rosa) | **Contrato de Entrada** (Input Data). |
+| `CadastroNovaCategoria` | **Use Cases** (Rosa) | Orquestrador (usa a interface). |
+| `NovaCategoriaRequest` | **Interface Adapters** (Verde) | Implementação técnica (concreta). |
+
+
+
+
 ## Refatore o cadastro de nova categoria para seguir a clean arch
 Agora começou o jogo real. Você deve refatorar a funcionalidade de cadastro de nova categoria para buscar os objetivos desejados pela Clean Arch.
 
