@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 
 import com.deveficiente.casadocodigov2.cadastrocategoria.Categoria;
 import com.deveficiente.casadocodigov2.cadastrocupom.Cupom;
+import com.deveficiente.casadocodigov2.cadastrocupom.CupomRepository;
 import com.deveficiente.casadocodigov2.cadastrolivro.Livro;
 import com.deveficiente.casadocodigov2.novoautor.Autor;
 import com.deveficiente.casadocodigov2.paisestado.Estado;

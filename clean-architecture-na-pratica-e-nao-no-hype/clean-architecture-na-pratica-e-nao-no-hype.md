@@ -220,3 +220,14 @@ Refatore o código relativo a funcionalidade de cadastros de país e estado para
 
 
 Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/blob/eeb0430475d199a35e65a519e1c649b725999bbf/src/main/java/com/deveficiente/casadocodigov2/paisestado/CriaEstadoController.java
+
+
+## Refatore o cadastro de cupom para seguir a Clean Arch
+Aqui é para ser mamão com açúcar de novo! Refatoração parecida com as anteriores e é muito esperado que você esteja mais tranquilo(a).
+
+Refatore o código relativo a funcionalidade de cadastro de cupom para buscar os objetivos descritos na Clean Arch.
+
+Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/67468eb24a2aee924ddbd90f54003998fea96667/src/main/java/com/deveficiente/casadocodigov2/fechamentocompra
+
+
+
