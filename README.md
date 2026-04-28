@@ -62,6 +62,10 @@ Repositórios: https://github.com/asouza?tab=repositories
 - [Domain Driven Design: As partes que realmente importam](./domain-driven-design-as-partes-que-realmente-importam/domain-driven-design-as-partes-que-realmente-importam.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/xOnnnA)
 
+### Curso: Clean Architecture na prática e não no Hype
+- [Clean Architecture na prática e não no Hype](./clean-architecture-na-pratica-e-nao-no-hype/clean-architecture-na-pratica-e-nao-no-hype.md)
+- [Certificado](https://dev-eficiente.memberkit.com.br/certificates/QAg8mw)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
