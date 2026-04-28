@@ -188,7 +188,7 @@ O código começou com um `Controller` que fazia tudo: recebia os dados da web, 
 * **Resultado:** O Caso de Uso agora aponta para uma interface que ele mesmo possui. A regra de dependência foi respeitada (o de fora aponta para dentro).
 
 
-### Exemplo visual das camadas
+#### Exemplo visual das camadas
 1.  **Framework (Azul/Web)** recebe o JSON.
 2.  **Controller (Verde)** transforma o JSON em um objeto que o Use Case entende.
 3.  **Use Case (Rosa)** processa a regra usando a **Entity (Amarelo)**.
@@ -197,7 +197,7 @@ O código começou com um `Controller` que fazia tudo: recebia os dados da web, 
 
 
 
-### Mapeamento do Contexto: Cadastro de Categoria 📚
+#### Mapeamento do Contexto: Cadastro de Categoria 📚
 
 | Camada | Componente | Item do Exemplo | O que este arquivo faz? |
 | :--- | :--- | :--- | :--- |
@@ -215,6 +215,14 @@ Vamos focar no contexto de Categoria - Visualização da Dependência:
 | `CadastroNovaCategoria` | **Use Cases** (Rosa) | Orquestrador (usa a interface). |
 | `NovaCategoriaRequest` | **Interface Adapters** (Verde) | Implementação técnica (concreta). |
 
+
+Exemplo de divisão para o pacote fechamentocompra:
+| Camada | Componentes Aceitos | Arquivos do Exemplo (`fechamentocompra`) |
+| :--- | :--- | :--- |
+| **Frameworks & Drivers** (Azul) | Infraestrutura, Configurações Spring, Banco de Dados | (Configurações JPA/Hibernate implícitas) |
+| **Interface Adapters** (Verde) | Controller 🎮, DTOs (Request/Response), Presenters | `FechaCompraParte1Controller`, `NovaCompraRequest`, `NovoPedidoRequest`, `NovoPedidoItemRequest` |
+| **Use Cases** (Rosa) | Use Case ⚙️, Interfaces de Entrada/Saída, Gateways, Validadores de fluxo | `FechaNovaCompra`, `DadosNovaCompra` (Interface), `CompraRepository` (Interface), `CupomValidoValidator`, `EstadoPertenceAPaisValidator` |
+| **Entities** (Amarelo) | Entidades de Domínio 💎, Objetos de Valor (VOs) | `Compra`, `Pedido`, `ItemPedido`, `CupomAplicado` |
 
 
 
@@ -249,7 +257,12 @@ Aqui é para ser mamão com açúcar de novo! Refatoração parecida com as ante
 
 Refatore o código relativo a funcionalidade de cadastro de cupom para buscar os objetivos descritos na Clean Arch.
 
-Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/tree/67468eb24a2aee924ddbd90f54003998fea96667/src/main/java/com/deveficiente/casadocodigov2/fechamentocompra
+Você pode verificar a solução sugerida na seção de mídias de apoio: https://github.com/asouza/jornada-deveficiente-casa-do-codigo/blob/arquitetura-camadas/src/main/java/com/deveficiente/casadocodigov2/cadastrocupom/NovoCupomController.java
 
 
+## Refatore o fechamento da compra para seguir a Clean Arch
+Agora chegamos no maior desafio! O fluxo de fechamento de compra envolve mais validações e vai te dar um desafio extra que vai exigir de você além da refatoração para seguir a clean arch, relembrar dos princípios de programação defensiva e também de como utilizar polimorfismo para reaproveitar o código.
 
+Prepare seu capacete, que sua cabeça pode doer um pouco! Vai que vai!
+
+Você pode verificar a solução sugerida na seção de mídias de apoio.

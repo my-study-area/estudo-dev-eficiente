@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -15,6 +14,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.util.Assert;
 
+import com.deveficiente.casadocodigov2.cadastrolivro.Livro;
 import com.deveficiente.casadocodigov2.compartilhado.Generated;
 
 public class NovoPedidoRequest {
@@ -43,13 +43,17 @@ public class NovoPedidoRequest {
 		return "NovoPedidoRequest [total=" + total + ", itens=" + itens + "]";
 	}
 
-	public Function<Compra,Pedido> toModel(EntityManager manager) {
+	public Function<Compra, Pedido> toModel(Function<Long, Livro> carregaLivro) {
 		
-		Set<ItemPedido> itensCalculados = itens.stream().map(item -> item.toModel(manager)).collect(Collectors.toSet());
+		Set<ItemPedido> itensCalculados = itens.stream()
+				.map(item -> item.toModel(carregaLivro))
+				.collect(Collectors.toSet());
 		
 		return (compra) -> {
-			Pedido pedido = new Pedido(compra,itensCalculados);			
-			Assert.isTrue(pedido.totalIgual(total),"Olha, o total("+total+") enviado não corresponde ao total real("+pedido.total()+"). Itens = "+itensCalculados);
+			Pedido pedido = new Pedido(compra, itensCalculados);			
+			Assert.isTrue(pedido.totalIgual(total), "Olha, o total(" + total
+					+ ") enviado não corresponde ao total real(" + pedido.total()
+					+ "). Itens = " + itensCalculados);
 			return pedido;			
 		};
 						

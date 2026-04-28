@@ -3,7 +3,6 @@ package com.deveficiente.casadocodigov2.fechamentocompra;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -15,14 +14,14 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import com.deveficiente.casadocodigov2.cadastrocupom.Cupom;
-import com.deveficiente.casadocodigov2.cadastrocupom.CupomRepository;
+import com.deveficiente.casadocodigov2.cadastrolivro.Livro;
 import com.deveficiente.casadocodigov2.compartilhado.Documento;
 import com.deveficiente.casadocodigov2.compartilhado.ExistsId;
 import com.deveficiente.casadocodigov2.compartilhado.Generated;
 import com.deveficiente.casadocodigov2.paisestado.Estado;
 import com.deveficiente.casadocodigov2.paisestado.Pais;
 
-public class NovaCompraRequest {
+public class NovaCompraRequest implements DadosNovaCompra {
 
 	@Email
 	@NotBlank
@@ -125,27 +124,27 @@ public class NovaCompraRequest {
 		return idEstado;
 	}
 
-	// 1
-	public Compra toModel(EntityManager manager, CupomRepository cupomRepository) {
+	@Override
+	public Compra toModel(
+			Function<Long, Pais> carregaPais,
+			Function<Long, Estado> carregaEstado,
+			Function<Long, Livro> carregaLivro,
+			Function<String, Cupom> carregaCupom) {
+
 		@NotNull
-		// 1
-		Pais pais = manager.find(Pais.class, idPais);
+		Pais pais = carregaPais.apply(idPais);
 
-		// 1
-		// 1
-		Function<Compra, Pedido> funcaoCriacaoPedido = pedido.toModel(manager);
+		Function<Compra, Pedido> funcaoCriacaoPedido = pedido.toModel(carregaLivro);
 
-		// 1 funcao como argumento
 		Compra compra = new Compra(email, nome, sobrenome, documento, endereco,
 				complemento, pais, telefone, cep, funcaoCriacaoPedido);
-		// 1
+
 		if (idEstado != null) {
-			compra.setEstado(manager.find(Estado.class, idEstado));
+			compra.setEstado(carregaEstado.apply(idEstado));
 		}
 
-		// 1
 		if (StringUtils.hasText(codigoCupom)) {
-			Cupom cupom = cupomRepository.getByCodigo(codigoCupom);
+			Cupom cupom = carregaCupom.apply(codigoCupom);
 			compra.aplicaCupom(cupom);
 		}
 

@@ -1,6 +1,7 @@
 package com.deveficiente.casadocodigov2.fechamentocompra;
 
-import javax.persistence.EntityManager;
+import java.util.function.Function;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -34,9 +35,9 @@ public class NovoPedidoItemRequest {
 				+ quantidade + "]";
 	}
 
-	public ItemPedido toModel(EntityManager manager) {
-		@NotNull Livro livro = manager.find(Livro.class, idLivro);
-		return new ItemPedido(livro,quantidade);
+	public ItemPedido toModel(Function<Long, Livro> carregaLivro) {
+		@NotNull Livro livro = carregaLivro.apply(idLivro);
+		return new ItemPedido(livro, quantidade);
 	}
 	
 }
