@@ -1,5 +1,6 @@
 package common;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Basket {
@@ -43,4 +44,7 @@ public class Basket {
         return false;
     }
 
+    public List<Item> getItems() {
+        return List.copyOf(items);
+    }
 }

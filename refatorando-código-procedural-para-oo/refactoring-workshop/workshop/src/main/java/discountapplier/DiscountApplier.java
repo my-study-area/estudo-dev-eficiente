@@ -2,49 +2,23 @@ package discountapplier;
 
 import common.Basket;
 
+import java.util.List;
+
 public class DiscountApplier {
+    private final List<DiscountStrategy> discounts;
+
+    public DiscountApplier(List<DiscountStrategy> discounts) {
+        this.discounts = discounts;
+    }
 
     public void apply(Basket basket) {
-        boolean ok = discountPerProduct(basket);
-        if(!ok) discountPerAmount(basket);
+        for (DiscountStrategy discount : discounts) {
+            if (discount.apply(basket)) {
+                System.out.println("Valor do desconto: " + basket.getAmount());
+                return;
+            }
+        }
+        System.out.println("Sem desconto");
     }
 
-    private boolean discountPerProduct(Basket basket) {
-        if(basket.has("MACBOOK") && basket.has("IPHONE")) {
-            basket.subtract(basket.getAmount() * 0.15);
-            return true;
-        }
-
-        if(basket.has("NOTEBOOK") && basket.has("WINDOWS PHONE")) {
-            basket.subtract(basket.getAmount() * 0.12);
-            return true;
-        }
-
-        if(basket.has("XBOX")) {
-            basket.subtract(basket.getAmount() * 0.7);
-            return true;
-        }
-
-        // ... and many more ...
-
-        return false;
-    }
-
-    private void discountPerAmount(Basket basket) {
-
-        if(basket.getAmount()<=1000 && basket.qtyOfItems() <= 2) {
-            basket.subtract(basket.getAmount() * 0.02);
-            return;
-        }
-
-        else if(basket.getAmount() > 3000 && basket.qtyOfItems() < 5 && basket.qtyOfItems() > 2) {
-            basket.subtract(basket.getAmount() * 0.05);
-            return;
-        }
-
-        else if(basket.getAmount() > 3000 && basket.qtyOfItems() >= 5) {
-            basket.subtract(basket.getAmount() * 0.06);
-            return;
-        }
-    }
 }
