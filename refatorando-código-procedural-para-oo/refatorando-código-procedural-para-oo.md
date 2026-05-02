@@ -62,3 +62,15 @@ Identificação dos problemas:
 
 
 
+## O problema do cálculo de descontos: Abstraindo as regras de desconto
+Refinamento sobre o projeto no estado atual (fluxograma de classes e explicação): [refatorando-código-procedural-para-oo](./refatorando-código-procedural-para-oo.md)
+
+Diagrama do mapeamento de classe no mermaid com o AS IS: [Mermaid live editor](https://mermaid.ai/live/edit?utm_medium=share&utm_source=mermaid_live_editor#pako:eNq1VW1v0zAQ_iuWpUkptFG7NlkWTZPGJiQkXooGX1C-uInbWcR2sB1EGN1v55zEe3FSxgfIhzb23fPc3XNn5xbnsqA4xXlJtL5iZKcIzwSC5-gIrUkuDUWXknMpul1BONUVySnK21102-3bp-VAr4j-Ss3jffvMUCHrTUkR4bIWxje-ZdrcvTGU3yEGv_qp_WVPGvhueuIT6Zpbuw4m6Ltkhc-j641RJDfBk2zGfXfUXLRm4OrcfY9vpvmwdeGYX9VLdEN0cG0UEztUKVnUOUTaSFlSIkaCOaKHIh-c9pnwdbYeQ5X7cLZNvgkStBkf6EstmFkrlg-KtHGCR7RTRzR10MrCJiMVvQd3KKgDj9g_mmZcOLB9dvkcVB-cPklDykNe--71Xrp-MDO8yDB6MZvBGyeigUUrZQoTLQxhQjvAwwm4Yjq3k3BRVSWjyj8KRW8mnXl4JhwelCCG7hq_b2dnIAJVWyA7P_frtKxN0Ge_af9GxmhkQlzUNVXdIPth_w33uhvt_0B-MdTz0XXhi3p334fB9eERBs_hJ39VytNL4w91vIYbR6pmqNCmZmUBozs6X2MzPBiks19hONLoFDFelZTTezGeRbo2Hoa6dkg4OwO6FNWaegBXdxieD0jguCkK0EPpWUyvd4q4LNiWUY2neKdYgVOjajrFnCpO7BK3ymbY3EDeGU7htaBbUpcmw5nYA6wi4ouU3CGVrHc3ON2SUsOqrgoI2n_9nAupjbxuRO7WtGBQzLv-c2n_gIaKgqpLmzhOF0ncxsHpLf6B09VxGEXL5DiJkvlpfLpaTHGD09lJHC5Wq-gkiuJkfrKIV_sp_tlmtgjBe75cJtH8OInjVbzc_wa5Nk4m)
+
+
+Linha de reaciocínio:
+- **Problema**: O código atual viola o princípio de Aberto/Fechado (OCP), pois precisamos alterar a classe para cada novo desconto.
+- **Decisão 1 (Encapsulamento)**: Mover a verificação de "quais produtos" para uma lista dinâmica. **Resultado**: A classe agora funciona para qualquer produto.
+- **Decisão 2 (Polimorfismo)**: Perceber que "Desconto por Quantidade" e "Desconto por Produto" fazem a mesma coisa (validam critério e aplicam valor). **Resultado**: Unificação na interface `DiscountStrategy.
+- **Decisão 3 (Simplificação de Abstração)**: Descartar a ideia de ter múltiplas interfaces específicas se uma interface genérica resolve o problema de forma mais simples.
+- **Decisão 4 (Injeção de Dependência)**: As regras não "nascem" mais dentro das classes; elas são injetadas pela `DiscountFactory`. **Resultado**: O sistema torna-se testável e extensível sem mexer no motor principal
