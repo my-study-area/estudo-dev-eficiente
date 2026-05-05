@@ -74,3 +74,9 @@ Linha de reaciocínio:
 - **Decisão 2 (Polimorfismo)**: Perceber que "Desconto por Quantidade" e "Desconto por Produto" fazem a mesma coisa (validam critério e aplicam valor). **Resultado**: Unificação na interface `DiscountStrategy.
 - **Decisão 3 (Simplificação de Abstração)**: Descartar a ideia de ter múltiplas interfaces específicas se uma interface genérica resolve o problema de forma mais simples.
 - **Decisão 4 (Injeção de Dependência)**: As regras não "nascem" mais dentro das classes; elas são injetadas pela `DiscountFactory`. **Resultado**: O sistema torna-se testável e extensível sem mexer no motor principal
+
+
+## O problema do cálculo de descontos: Command or Query separation
+A método apply da interface DiscountStrategy aplica o desconto em algumas situações e outras não, isso causa dúvida em relação ao entendimento da nomenclatura e sua ação. Em alguns caso altera um estado e outras não. A ideia da aula é corrigir esse problema separando a responsábilidade, divindo em duas partes: verificar se o desconto pode ser aplicado e outra para realizar a alteração de estado e aplicar o desconto. Vamos chamar os métodos de **apply** e **shoulBeApplied**.
+
+

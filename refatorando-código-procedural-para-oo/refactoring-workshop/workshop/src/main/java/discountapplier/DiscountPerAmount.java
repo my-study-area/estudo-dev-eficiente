@@ -18,17 +18,17 @@ public class DiscountPerAmount implements DiscountStrategy {
     }
 
     @Override
-    public boolean apply(Basket basket) {
+    public boolean shouldBeApplied(Basket basket) {
         int quantityOfItens = basket.qtyOfItems();
         double amount = basket.getAmount();
-
         boolean withinQuantityLimit = quantityOfItens >= minQuantity && quantityOfItens <= maxQuantity;
         boolean withinAmountLimit = amount >= minAmount && amount <= maxAmount;
 
-        if (withinQuantityLimit && withinAmountLimit) {
-            basket.subtract(basket.getAmount() * discount);
-            return true;
-        }
-        return false;
+        return withinQuantityLimit && withinAmountLimit;
+    }
+
+    @Override
+    public void apply(Basket basket) {
+        basket.subtract(basket.getAmount() * discount);
     }
 }

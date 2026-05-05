@@ -14,12 +14,14 @@ public class DiscountPerProduct implements DiscountStrategy {
     }
 
     @Override
-    public boolean apply(Basket basket) {
-        boolean allProductsInTheBasket = productsWithDiscountIfAllInTheBasket.stream().allMatch(product -> basket.has(product));
-        if (allProductsInTheBasket) {
-            basket.subtract(basket.getAmount() * discountPercentage);
-            return true;
-        }
-        return false;
+    public boolean shouldBeApplied(Basket basket) {
+        return productsWithDiscountIfAllInTheBasket
+                .stream()
+                .allMatch(basket::has);
+    }
+
+    @Override
+    public void apply(Basket basket) {
+        basket.subtract(basket.getAmount() * discountPercentage);
     }
 }

@@ -12,13 +12,18 @@ public class DiscountApplier {
     }
 
     public void apply(Basket basket) {
+        boolean noneDiscountApplied = true;
         for (DiscountStrategy discount : discounts) {
-            if (discount.apply(basket)) {
+            if (discount.shouldBeApplied(basket)) {
+                discount.apply(basket);
+                noneDiscountApplied = false;
                 System.out.println("Valor do desconto: " + basket.getAmount());
-                return;
             }
         }
-        System.out.println("Sem desconto");
+
+        if (noneDiscountApplied) {
+            System.out.println("Sem desconto");
+        }
     }
 
 }
