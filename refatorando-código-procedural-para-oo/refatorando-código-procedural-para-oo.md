@@ -80,3 +80,28 @@ Linha de reaciocínio:
 A método apply da interface DiscountStrategy aplica o desconto em algumas situações e outras não, isso causa dúvida em relação ao entendimento da nomenclatura e sua ação. Em alguns caso altera um estado e outras não. A ideia da aula é corrigir esse problema separando a responsábilidade, divindo em duas partes: verificar se o desconto pode ser aplicado e outra para realizar a alteração de estado e aplicar o desconto. Vamos chamar os métodos de **apply** e **shoulBeApplied**.
 
 
+
+## O problema do cálculo de descontos: Encapsulamento e imutabilidade
+- renomeie o metodo subtract da classe Basket para applyDiscountByPercentage. Adicione validação dos valores de entrada e aplique o desconto em cima do valor total do Basket.
+```java
+/**
+ * Aplica desconto baseado em porcentagem.
+ * Se a porcentagem de desconto for invalida, nenhum desconto é aplicado.
+ * 
+ * @param discountPercentage porcentagem, [0.0, 1.0]
+ */
+public void applyDiscountByPercentage(double discountPercentage) {
+    if (discountPercentage < 0 || discountPercentage > 1) {
+        // throw new IllegalArgumentException("Invalid discount percentage");
+        return;
+    }
+
+    this.amount -= this.amount * discountPercentage;
+}
+```
+- altere o método apply para as classes DiscountPerAmount e DiscountPerProduct para receber como parâmetro somente o valor do desconto
+```java
+public void apply(Basket basket) {
+    basket.applyDiscountByPercentage(discountPercentage);
+}
+```

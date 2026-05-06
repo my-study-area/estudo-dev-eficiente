@@ -29,6 +29,6 @@ public class DiscountPerAmount implements DiscountStrategy {
 
     @Override
     public void apply(Basket basket) {
-        basket.subtract(basket.getAmount() * discount);
+        basket.applyDiscountByPercentage(discount);
     }
 }
