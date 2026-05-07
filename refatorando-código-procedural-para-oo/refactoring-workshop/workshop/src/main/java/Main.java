@@ -1,7 +1,7 @@
 import common.Basket;
 import common.Item;
 import discountapplier.DiscountApplier;
-import discountapplier.DiscountFactory;
+import discountapplier.DiscountApplyFactory;
 import discountapplier.DiscountRepositoryFake;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         DiscountRepositoryFake discountRepository = new DiscountRepositoryFake();
-        DiscountApplier discountApplier = new DiscountFactory(discountRepository).build();
+        DiscountApplier discountApplier = new DiscountApplyFactory(discountRepository).build();
         Item geladeira = new Item("geladeira", 3, 100.00);
         Item xbox = new Item("XBOX", 1, 1000.00);
 

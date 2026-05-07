@@ -3,10 +3,10 @@ package discountapplier;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscountFactory {
+public class DiscountApplyFactory {
     private final DiscountRepository repository;
 
-    public DiscountFactory(DiscountRepository repository) {
+    public DiscountApplyFactory(DiscountRepository repository) {
         this.repository = repository;
     }
 
