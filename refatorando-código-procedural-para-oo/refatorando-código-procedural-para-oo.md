@@ -105,3 +105,10 @@ public void apply(Basket basket) {
     basket.applyDiscountByPercentage(discountPercentage);
 }
 ```
+
+## O problema do cálculo de descontos: Dados e comportamento juntos
+- Crie a classe **DiscountProduct**  com id com int, lista de string com produtos e desconto com double.
+- Crie a classe **DiscountAmount**  com id com int, minItems e maxItems com int, minAmount e maxAmount com double e discount com double
+- Crie a interface **DiscountRepository** com o método **getAllDiscountsPerProdut** que retorna uma lista de **DiscountProduct** e **getAllDiscountsPerAmount** que retorna uma lista De **DiscountAmount**
+- Na classe **DiscountFactory** adicione como dependência do construtor a interface **DiscountRepository**. No método **build**, recupere os descontos através dos métodos **getAllDiscountsPerProdut** e **getAllDiscountsPerAmount**. Utilize a lista de **DiscountStrategy** chamada **discounts** e percorra cada tipo de desconto recuperado do banco de dados (repository) adicionando na lista **discounts**.
+

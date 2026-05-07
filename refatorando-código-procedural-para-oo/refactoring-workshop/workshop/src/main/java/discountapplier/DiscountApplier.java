@@ -11,6 +11,13 @@ public class DiscountApplier {
         this.discounts = discounts;
     }
 
+    /**
+     * Aplica o desconto na cesta
+     * É realizado apenas um tipo de desconto e a prioridade é o desconto de produtos
+     * e somente depois o desconto por quantidade. Caso não atenda as regras não aplica
+     * desconto na cesta de produtos.
+     * @param basket
+     */
     public void apply(Basket basket) {
         boolean noneDiscountApplied = true;
         for (DiscountStrategy discount : discounts) {
@@ -18,6 +25,7 @@ public class DiscountApplier {
                 discount.apply(basket);
                 noneDiscountApplied = false;
                 System.out.println("Valor do desconto: " + basket.getAmount());
+                break;
             }
         }
 
