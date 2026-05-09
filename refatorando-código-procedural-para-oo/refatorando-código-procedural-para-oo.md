@@ -112,3 +112,17 @@ public void apply(Basket basket) {
 - Crie a interface **DiscountRepository** com o método **getAllDiscountsPerProdut** que retorna uma lista de **DiscountProduct** e **getAllDiscountsPerAmount** que retorna uma lista De **DiscountAmount**
 - Na classe **DiscountFactory** adicione como dependência do construtor a interface **DiscountRepository**. No método **build**, recupere os descontos através dos métodos **getAllDiscountsPerProdut** e **getAllDiscountsPerAmount**. Utilize a lista de **DiscountStrategy** chamada **discounts** e percorra cada tipo de desconto recuperado do banco de dados (repository) adicionando na lista **discounts**.
 
+
+
+
+## O problema do cálculo de descontos: Finalizando
+Esta aula é um resumo sobre o passo a passo sobre a solução do problema.
+
+**Resumo Técnico da Evolução**
+| Antes (Monolítico) | Depois (Refatorado) |
+| :--- | :--- |
+| Lógica centralizada em `if/else` | Lógica distribuída em classes de Estratégia |
+| Dados fixos no código (*Hardcoded*) | Dados injetados via fonte externa |
+| Difícil de testar (depende de tudo) | Fácil de testar (classes pequenas e isoladas) |
+| Violação do SRP (Single Responsibility) | Respeito ao SRP e OCP |
+
