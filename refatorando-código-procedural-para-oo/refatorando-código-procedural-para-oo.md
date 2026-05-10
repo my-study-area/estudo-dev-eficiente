@@ -63,7 +63,7 @@ Identificação dos problemas:
 
 
 ## O problema do cálculo de descontos: Abstraindo as regras de desconto
-Refinamento sobre o projeto no estado atual (fluxograma de classes e explicação): [refatorando-código-procedural-para-oo](./refatorando-código-procedural-para-oo.md)
+Refinamento sobre o projeto no estado atual (fluxograma de classes e explicação): [refinamento-projeto-para-aula-abstraindo-regras-desconto](./refinamento-projeto-para-aula-abstraindo-regras-desconto.md)
 
 Diagrama do mapeamento de classe no mermaid com o AS IS: [Mermaid live editor](https://mermaid.ai/live/edit?utm_medium=share&utm_source=mermaid_live_editor#pako:eNq1VW1v0zAQ_iuWpUkptFG7NlkWTZPGJiQkXooGX1C-uInbWcR2sB1EGN1v55zEe3FSxgfIhzb23fPc3XNn5xbnsqA4xXlJtL5iZKcIzwSC5-gIrUkuDUWXknMpul1BONUVySnK21102-3bp-VAr4j-Ss3jffvMUCHrTUkR4bIWxje-ZdrcvTGU3yEGv_qp_WVPGvhueuIT6Zpbuw4m6Ltkhc-j641RJDfBk2zGfXfUXLRm4OrcfY9vpvmwdeGYX9VLdEN0cG0UEztUKVnUOUTaSFlSIkaCOaKHIh-c9pnwdbYeQ5X7cLZNvgkStBkf6EstmFkrlg-KtHGCR7RTRzR10MrCJiMVvQd3KKgDj9g_mmZcOLB9dvkcVB-cPklDykNe--71Xrp-MDO8yDB6MZvBGyeigUUrZQoTLQxhQjvAwwm4Yjq3k3BRVSWjyj8KRW8mnXl4JhwelCCG7hq_b2dnIAJVWyA7P_frtKxN0Ge_af9GxmhkQlzUNVXdIPth_w33uhvt_0B-MdTz0XXhi3p334fB9eERBs_hJ39VytNL4w91vIYbR6pmqNCmZmUBozs6X2MzPBiks19hONLoFDFelZTTezGeRbo2Hoa6dkg4OwO6FNWaegBXdxieD0jguCkK0EPpWUyvd4q4LNiWUY2neKdYgVOjajrFnCpO7BK3ymbY3EDeGU7htaBbUpcmw5nYA6wi4ouU3CGVrHc3ON2SUsOqrgoI2n_9nAupjbxuRO7WtGBQzLv-c2n_gIaKgqpLmzhOF0ncxsHpLf6B09VxGEXL5DiJkvlpfLpaTHGD09lJHC5Wq-gkiuJkfrKIV_sp_tlmtgjBe75cJtH8OInjVbzc_wa5Nk4m)
 
@@ -126,3 +126,10 @@ Esta aula é um resumo sobre o passo a passo sobre a solução do problema.
 | Difícil de testar (depende de tudo) | Fácil de testar (classes pequenas e isoladas) |
 | Violação do SRP (Single Responsibility) | Respeito ao SRP e OCP |
 
+
+
+
+## O problema do cáculo de imposto: Introdução
+Classe para analise do problema: https://github.com/forks-projects/refactoring-workshop/blob/main/workshop/src/main/java/taxcalculator/TaxCalculator.java
+
+Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refinamento_as_is_pacote_taxcalculator.md)
