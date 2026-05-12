@@ -133,3 +133,12 @@ Esta aula é um resumo sobre o passo a passo sobre a solução do problema.
 Classe para analise do problema: https://github.com/forks-projects/refactoring-workshop/blob/main/workshop/src/main/java/taxcalculator/TaxCalculator.java
 
 Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refinamento_as_is_pacote_taxcalculator.md)
+
+
+
+
+## O problema do cáculo de imposto: Introdução
+- crie a interface TaxCalculatorStrategy com a assintatura de método do tipo double calculate
+- crie as implementações TenOrTwentyPercent e FifteenOrTwentyFivePercent
+- na classe TaxCalculator, substitua as chamadas dos métodos privados pelas chamadas das implementações de TaxCalculatorStrategy.
+
