@@ -142,3 +142,12 @@ Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refin
 - crie as implementações TenOrTwentyPercent e FifteenOrTwentyFivePercent
 - na classe TaxCalculator, substitua as chamadas dos métodos privados pelas chamadas das implementações de TaxCalculatorStrategy.
 
+
+
+## O problemam do cáculo de imposto: Evitando repetição de código
+- Crie uma classe ThreshouldBasedTaxCalculation que implementa TaxCalculatorStrategy e com os campos final: threshould, aboveTheThreshouldTax e belowTheThresghouldTax como double. Na implementação do método, reutilize o código utilizado anteriormente nas classes TenOrTwentyPercent e FifteenOrTwentyFivePercent.
+- Na FifteenOrTwentyFivePercent, altere o implement para extends da ThreshouldBasedTaxCalculation
+- Na classe TaxCalculator deve criar duas variaveis que representam os descontos 10/12 % de desconto e outra para o 15/25 % de desconto.
+
+> Caso essa faixa de porcentagem for importante, poderia ser reutilizada
+- as classes TenOrTwentyPercent e FifteenOrTwentyFivePercent podem mudar da implementação para uma extensão para a classe ThreshouldBasedTaxCalculation e sobrescrever o contrutor pai de acordo com a necessidade. O construtor deve ser um valor fixo sobrecrevendo
