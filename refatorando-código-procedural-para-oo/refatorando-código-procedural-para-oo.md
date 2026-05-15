@@ -137,7 +137,7 @@ Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refin
 
 
 
-## O problema do cáculo de imposto: Introdução
+## O problemam do cáculo de imposto: Movendo as estratégias para outras classes
 - crie a interface TaxCalculatorStrategy com a assintatura de método do tipo double calculate
 - crie as implementações TenOrTwentyPercent e FifteenOrTwentyFivePercent
 - na classe TaxCalculator, substitua as chamadas dos métodos privados pelas chamadas das implementações de TaxCalculatorStrategy.
@@ -151,3 +151,12 @@ Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refin
 
 > Caso essa faixa de porcentagem for importante, poderia ser reutilizada
 - as classes TenOrTwentyPercent e FifteenOrTwentyFivePercent podem mudar da implementação para uma extensão para a classe ThreshouldBasedTaxCalculation e sobrescrever o contrutor pai de acordo com a necessidade. O construtor deve ser um valor fixo sobrecrevendo
+
+
+## O problemam do cáculo de imposto: Usando enums para conectar a estratégia (e o pq não funciona em cenários mais complicados)
+- Adição de construtor no enum **Role** para receber o objeto **TaxCalculatorStrategy** e adição do campo strategy e atribuição no construtor.
+- Atribuição da estratégia **TenOrTwentyPercent** à constante **DEVELOPER**.
+- Atribuição da estratégia **FifteenOrTwentyFivePercent** às constantes **DBA** e **TESTER**.
+- Adição do getStrategy
+- Criação do método **calculateTax** na classe **Employee**, retornando o cálculo executado pela estratégia contida no enum.
+- Atualização da classe **TaxCalculator** para invocar o método **calculateTax** do próprio objeto **Employee**.
