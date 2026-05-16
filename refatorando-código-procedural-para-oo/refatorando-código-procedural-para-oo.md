@@ -177,6 +177,65 @@ classDiagram
 - na classe TaxCalculator, substitua as chamadas dos métodos privados pelas chamadas das implementações de TaxCalculatorStrategy.
 
 
+```mermaid
+classDiagram
+    class Role {
+        <<enumeration>>
+        DEVELOPER
+        DBA
+        TESTER
+    }
+
+    class Employee {
+        - int id
+        - String name
+        - Role role
+        - Calendar admissionDate
+        - double baseSalary
+        + getId() int
+        + getName() String
+        + getRole() Role
+        + getAdmissionDate() Calendar
+        + getBaseSalary() double
+    }
+
+    class TaxCalculatorStrategy {
+        <<interface>>
+        + calculate(Employee employee) double
+    }
+
+    class TenOrTwentyPercent {
+        + calculate(Employee employee) double
+    }
+
+    class FifteenOrTwentyFivePercent {
+        + calculate(Employee employee) double
+    }
+
+    class TaxCalculator {
+        + calculateTax(Employee employee) double
+    }
+    
+    class MainTaxCalculator {
+        + main(String[] args) void
+    }
+
+    Employee --> Role : role
+    TaxCalculatorStrategy <|.. TenOrTwentyPercent : implements
+    TaxCalculatorStrategy <|.. FifteenOrTwentyFivePercent : implements
+    
+    TaxCalculator ..> Employee : recebe
+    TaxCalculator ..> TenOrTwentyPercent : instancia e usa
+    TaxCalculator ..> FifteenOrTwentyFivePercent : instancia e usa
+    
+    TaxCalculatorStrategy ..> Employee : recebe
+    MainTaxCalculator ..> TaxCalculator : usa
+    MainTaxCalculator ..> Employee : instancia
+
+```
+
+
+
 
 ## O problemam do cáculo de imposto: Evitando repetição de código
 - Crie uma classe ThreshouldBasedTaxCalculation que implementa TaxCalculatorStrategy e com os campos final: threshould, aboveTheThreshouldTax e belowTheThresghouldTax como double. Na implementação do método, reutilize o código utilizado anteriormente nas classes TenOrTwentyPercent e FifteenOrTwentyFivePercent.
@@ -186,6 +245,72 @@ classDiagram
 > Caso essa faixa de porcentagem for importante, poderia ser reutilizada
 - as classes TenOrTwentyPercent e FifteenOrTwentyFivePercent podem mudar da implementação para uma extensão para a classe ThreshouldBasedTaxCalculation e sobrescrever o contrutor pai de acordo com a necessidade. O construtor deve ser um valor fixo sobrecrevendo
 
+```mermaid
+classDiagram
+    class Role {
+        <<enumeration>>
+        DEVELOPER
+        DBA
+        TESTER
+    }
+
+    class Employee {
+        - int id
+        - String name
+        - Role role
+        - Calendar admissionDate
+        - double baseSalary
+        + getId() int
+        + getName() String
+        + getRole() Role
+        + getAdmissionDate() Calendar
+        + getBaseSalary() double
+    }
+
+    class TaxCalculatorStrategy {
+        <<interface>>
+        + calculate(Employee employee) double
+    }
+
+    class ThreshouldBasedTaxCalculation {
+        - double threshould
+        - double aboveTheThreshouldTax
+        - double belowTheThresghouldTax
+        + ThreshouldBasedTaxCalculation(threshould, aboveTax, belowTax)
+        + calculate(Employee employee) double
+    }
+
+    class TenOrTwentyPercent {
+        + TenOrTwentyPercent()
+    }
+
+    class FifteenOrTwentyFivePercent {
+        + FifteenOrTwentyFivePercent()
+    }
+
+    class TaxCalculator {
+        + calculateTax(Employee employee) double
+    }
+    
+    class MainTaxCalculator {
+        + main(String[] args) void
+    }
+
+    Employee --> Role : role
+    TaxCalculatorStrategy <|.. ThreshouldBasedTaxCalculation : implements
+    ThreshouldBasedTaxCalculation <|-- TenOrTwentyPercent : extends
+    ThreshouldBasedTaxCalculation <|-- FifteenOrTwentyFivePercent : extends
+    
+    TaxCalculator ..> Employee : recebe
+    TaxCalculator ..> TenOrTwentyPercent : instancia e usa
+    TaxCalculator ..> FifteenOrTwentyFivePercent : instancia e usa
+    
+    TaxCalculatorStrategy ..> Employee : recebe
+    MainTaxCalculator ..> TaxCalculator : usa
+    MainTaxCalculator ..> Employee : instancia
+
+```
+
 
 ## O problemam do cáculo de imposto: Usando enums para conectar a estratégia (e o pq não funciona em cenários mais complicados)
 - Adição de construtor no enum **Role** para receber o objeto **TaxCalculatorStrategy** e adição do campo strategy e atribuição no construtor.
@@ -194,6 +319,81 @@ classDiagram
 - Adição do getStrategy
 - Criação do método **calculateTax** na classe **Employee**, retornando o cálculo executado pela estratégia contida no enum.
 - Atualização da classe **TaxCalculator** para invocar o método **calculateTax** do próprio objeto **Employee**.
+
+```mermaid
+classDiagram
+    class TaxCalculatorStrategy {
+        <<interface>>
+        + calculate(Employee employee) double
+    }
+
+    class ThreshouldBasedTaxCalculation {
+        - double threshould
+        - double aboveTheThreshouldTax
+        - double belowTheThresghouldTax
+        + ThreshouldBasedTaxCalculation(threshould, aboveTax, belowTax)
+        + calculate(Employee employee) double
+    }
+
+    class TenOrTwentyPercent {
+        + TenOrTwentyPercent()
+    }
+
+    class FifteenOrTwentyFivePercent {
+        + FifteenOrTwentyFivePercent()
+    }
+
+    class Role {
+        <<enumeration>>
+        DEVELOPER
+        DBA
+        TESTER
+        - TaxCalculatorStrategy strategy
+        + Role(TaxCalculatorStrategy strategy)
+        + getStrategy() TaxCalculatorStrategy
+    }
+
+    class Employee {
+        - int id
+        - String name
+        - Role role
+        - Calendar admissionDate
+        - double baseSalary
+        + getId() int
+        + getName() String
+        + getRole() Role
+        + getAdmissionDate() Calendar
+        + getBaseSalary() double
+        + calculateTax() double
+    }
+
+    class TaxCalculator {
+        + calculateTax(Employee employee) double
+    }
+    
+    class MainTaxCalculator {
+        + main(String[] args) void
+    }
+
+    TaxCalculatorStrategy <|.. ThreshouldBasedTaxCalculation : implements
+    ThreshouldBasedTaxCalculation <|-- TenOrTwentyPercent : extends
+    ThreshouldBasedTaxCalculation <|-- FifteenOrTwentyFivePercent : extends
+    
+    Role --> TaxCalculatorStrategy : strategy
+    Role ..> TenOrTwentyPercent : instancia
+    Role ..> FifteenOrTwentyFivePercent : instancia
+
+    Employee --> Role : role
+    Employee ..> TaxCalculatorStrategy : usa
+    
+    TaxCalculator ..> Employee : usa
+    TaxCalculatorStrategy ..> Employee : usa
+    
+    MainTaxCalculator ..> TaxCalculator : usa
+    MainTaxCalculator ..> Employee : instancia
+
+```
+
 
 
 
