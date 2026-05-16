@@ -135,6 +135,40 @@ Classe para analise do problema: https://github.com/forks-projects/refactoring-w
 Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refinamento_as_is_pacote_taxcalculator.md)
 
 
+```mermaid
+classDiagram
+    class Role {
+        <<enumeration>>
+        DEVELOPER
+        DBA
+        TESTER
+    }
+
+    class Employee {
+        - int id
+        - String name
+        - Role role
+        - Calendar admissionDate
+        - double baseSalary
+        + Employee(int id, String name, Role role, Calendar admissionDate, double baseSalary)
+        + getId() int
+        + getName() String
+        + getRole() Role
+        + getAdmissionDate() Calendar
+        + getBaseSalary() double
+    }
+
+    class TaxCalculator {
+        + calculateTax(Employee employee) double
+        - tenOrTwentyPercent(Employee employee) double
+        - fifteenOrTwentyFivePercent(Employee employee) double
+    }
+
+    Employee --> Role : role
+    TaxCalculator ..> Employee : usa
+```
+
+
 
 
 ## O problemam do cáculo de imposto: Movendo as estratégias para outras classes
