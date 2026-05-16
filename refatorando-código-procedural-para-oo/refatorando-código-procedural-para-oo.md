@@ -171,3 +171,79 @@ Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refin
 - crie a classe TaxValues com a propriedades threshould, aboveTax e belowTax
 - criar a classe TaxCalculationResolver com construtor recebe uma TaxStrategiesRepository. Adicione o método forRole(Role role) que retorna uma TaxCalculatorStrategy. No corpo do método recupere a TaxValues e crie um objeto de ThreshouldBasedTaxCalculation com os valores.
 - Na classe TaxCalculator passe um TaxCalculationResolver no construtor e no método calculateTax recupere a estratégia com o resolver e execute a estratégia com o método calculate.
+
+
+```mermaid
+classDiagram
+    class Role {
+        <<enumeration>>
+        DEVELOPER
+        DBA
+        TESTER
+    }
+
+    class Employee {
+        - int id
+        - String name
+        - Role role
+        - Calendar admissionDate
+        - double baseSalary
+    }
+
+    class TaxValues {
+        - double thresould
+        - double aboveTax
+        - double bellowTax
+        + getThresould() double
+        + getAboveTax() double
+        + getBellowTax() double
+    }
+
+    class TaxCalculatorStrategy {
+        <<interface>>
+        + calculate(Employee employee) double
+    }
+
+    class ThreshouldBasedTaxCalculation {
+        - double threshould
+        - double aboveTheThreshouldTax
+        - double belowTheThresghouldTax
+        + calculate(Employee employee) double
+    }
+
+    class TaxStrategiesRepository {
+        <<interface>>
+        + getRole(Role role) TaxValues
+    }
+
+    class TaxStrategiesRepositoryFake {
+        + getRole(Role role) TaxValues
+    }
+
+    class TaxCalculationResolver {
+        - TaxStrategiesRepository repository
+        + getRole(Role role) TaxCalculatorStrategy
+    }
+
+    class TaxCalculator {
+        - TaxCalculationResolver resolver
+        + calculateTax(Employee employee) double
+    }
+    
+    class MainTaxCalculator {
+        + main(String[] args) void
+    }
+
+    Employee --> Role : role
+    TaxCalculatorStrategy <|.. ThreshouldBasedTaxCalculation : implements
+    TaxStrategiesRepository <|.. TaxStrategiesRepositoryFake : implements
+    TaxCalculationResolver --> TaxStrategiesRepository : repository
+    TaxCalculationResolver ..> TaxCalculatorStrategy : cria
+    TaxCalculationResolver ..> TaxValues : usa
+    TaxCalculator --> TaxCalculationResolver : resolver
+    TaxCalculator ..> Employee : usa
+    TaxCalculator ..> TaxCalculatorStrategy : executa
+    TaxCalculatorStrategy ..> Employee : usa
+```
+
+
