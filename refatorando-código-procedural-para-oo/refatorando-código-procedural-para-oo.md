@@ -481,3 +481,57 @@ classDiagram
 ```
 
 
+## O problema da geração de notas fiscais: Introdução ao desafio
+- O problema: https://github.com/forks-projects/refactoring-workshop/blob/main/workshop/src/main/java/invoicegenerator/InvoiceGenerator.java
+- Refinamento: [link](./refinamento-invoicegenerator-geracao-nota-fiscal.md)
+```mermaid
+classDiagram
+    class InvoiceGenerator {
+        - EmailSender email
+        - InvoiceRepository dao
+        + InvoiceGenerator(EmailSender email, InvoiceRepository dao)
+        + generate(ProvidedService providedService) Invoice
+        - simpleTax(double value) double
+    }
+
+    class ProvidedService {
+        - double monthlyAmount
+        - String customer
+        + ProvidedService()
+        + ProvidedService(double monthlyAmount, String customer)
+        + getMonthlyAmount() double
+        + setMonthlyAmount(double monthlyAmount) void
+        + getCustomer() String
+        + setCustomer(String customer) void
+    }
+
+    class Invoice {
+        - int id
+        - double rawAmount
+        - double taxes
+        + Invoice(int id, double rawAmount, double taxes)
+        + Invoice(double rawAmount, double taxes)
+        + getId() int
+        + setId(int id) void
+        + getRawAmount() double
+        + setRawAmount(double rawAmount) void
+        + getTaxes() double
+        + setTaxes(double taxes) void
+        + getValorLiquido() double
+    }
+
+    class EmailSender {
+        <<interface>>
+        + sendEmail(Invoice invoice) void
+    }
+
+    class InvoiceRepository {
+        <<interface>>
+        + persist(Invoice invoice) void
+    }
+
+    InvoiceGenerator --> EmailSender : utiliza
+    InvoiceGenerator --> InvoiceRepository : utiliza
+    InvoiceGenerator ..> ProvidedService : recebe como parâmetro
+    InvoiceGenerator ..> Invoice : cria e retorna
+```
