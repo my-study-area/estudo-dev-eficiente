@@ -13,7 +13,9 @@ public class MainTaxCalculator {
         Employee maria = new Employee(1, "Maria", Role.TESTER, mariaAdminissionDate, 100);
         Employee carlos = new Employee(1, "Carlos", Role.DBA, carlosAdminissionDate, 100000);
 
-        TaxCalculator taxCalculator = new TaxCalculator();
+        TaxStrategiesRepositoryFake repositoryFake = new TaxStrategiesRepositoryFake();
+        TaxCalculationResolver resolver = new TaxCalculationResolver(repositoryFake);
+        TaxCalculator taxCalculator = new TaxCalculator(resolver);
         double finalSalary = taxCalculator.calculateTax(adriano);
         System.out.println("Salario base: " + adriano.getBaseSalary());
         System.out.println("Salario com desconto: " + finalSalary);

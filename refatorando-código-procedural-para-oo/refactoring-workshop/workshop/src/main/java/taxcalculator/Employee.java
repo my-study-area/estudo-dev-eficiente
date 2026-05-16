@@ -34,7 +34,4 @@ public class Employee {
         return baseSalary;
     }
 
-    public double calculateTax() {
-        return getRole().getStrategy().calculate(this);
-    }
 }

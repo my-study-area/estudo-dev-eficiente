@@ -1,11 +1,14 @@
 package taxcalculator;
 
-import static taxcalculator.Role.*;
-
 public class TaxCalculator {
+    private final TaxCalculationResolver resolver;
+
+    public TaxCalculator(TaxCalculationResolver resolver) {
+        this.resolver = resolver;
+    }
 
     public double calculateTax(Employee employee) {
-        employee.getRole().getStrategy().calculate(employee);
-        return employee.calculateTax();
+        TaxCalculatorStrategy strategy = resolver.getRole(employee.getRole());
+        return strategy.calculate(employee);
     }
 }

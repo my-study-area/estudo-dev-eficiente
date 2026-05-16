@@ -160,3 +160,14 @@ Refinamento inicial do projeto: [refinamento_as_is_pacote_taxcalculator](./refin
 - Adição do getStrategy
 - Criação do método **calculateTax** na classe **Employee**, retornando o cálculo executado pela estratégia contida no enum.
 - Atualização da classe **TaxCalculator** para invocar o método **calculateTax** do próprio objeto **Employee**.
+
+
+
+## O problemam do cáculo de imposto: Trazendo informações do banco e resumo final
+- remover os parâmetros e métodos do enum Role
+- remover calculateTax da classe Employee
+- remover as classes TenOrTwentyPercent e FifteenOrTwentyFivePercent
+- Adicione a interface TaxStrategiesRepository com o método getRoles que retorna TaxValues
+- crie a classe TaxValues com a propriedades threshould, aboveTax e belowTax
+- criar a classe TaxCalculationResolver com construtor recebe uma TaxStrategiesRepository. Adicione o método forRole(Role role) que retorna uma TaxCalculatorStrategy. No corpo do método recupere a TaxValues e crie um objeto de ThreshouldBasedTaxCalculation com os valores.
+- Na classe TaxCalculator passe um TaxCalculationResolver no construtor e no método calculateTax recupere a estratégia com o resolver e execute a estratégia com o método calculate.
