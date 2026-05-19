@@ -1,13 +1,13 @@
 package invoicegenerator;
 
+import java.util.List;
+
 public class InvoiceGenerator {
 
-    private final EmailSender email;
-    private final InvoiceRepository dao;
+    private final List<InvoiceGeneratedAction> actions;
 
-    public InvoiceGenerator(EmailSender email, InvoiceRepository dao) {
-        this.email = email;
-        this.dao = dao;
+    public InvoiceGenerator(List<InvoiceGeneratedAction> actions) {
+        this.actions = actions;
     }
 
     public Invoice generate(ProvidedService providedService) {
@@ -16,8 +16,9 @@ public class InvoiceGenerator {
 
         Invoice nf = new Invoice(amount, simpleTax(amount));
 
-        email.sendEmail(nf);
-        dao.persist(nf);
+        actions.forEach(action-> {
+            action.process(nf);
+        });
 
         return nf;
     }

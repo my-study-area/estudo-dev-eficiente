@@ -535,3 +535,111 @@ classDiagram
     InvoiceGenerator ..> ProvidedService : recebe como parâmetro
     InvoiceGenerator ..> Invoice : cria e retorna
 ```
+
+
+
+## O problema da geração de notas fiscais: O padrão Observer
+O código sofria de alto acoplamento e violava o Princípio Aberto/Fechado, exigindo modificações manuais e novas dependências diretas na classe geradora sempre que uma nova ação pós-geração de nota fiscal precisava ser adicionada.
+
+- crie a interface InvoiceGeneratedAction com método void chamado process que recebe uma Invoice
+- altere a classe EmailSender para implementar InvoiceGeneratedAction e renomeie para SendInvoiceEmailAction.
+- crie uma classe chamada de PersistInvoiceAction que implementa InvoiceGeneratedAction e recebe no construtor um InvoiceRepository
+- Na classe InvoiceGenerator deve receber uma lista de InvoiceGeneratedAction. No método generate, deve-se percorrer a lista de ações e executar o método process.
+- crie a classe InvoiceGeneratorFactory com o método build que retorna uma lista de ações (InvoiceGeneratedAction). Nele deve-se adicionar todas as ações que devem ser utilizadas pela aplicação.
+
+**Relação com o Padrão Observer**    
+Essa solução é fortemente inspirada no Pattern Observer (onde um objeto notifica o mundo sobre suas mudanças).
+
+A única diferença da implementação estrita do GoF (Gang of Four) é que, no padrão tradicional, a lista de observadores fica dentro da própria entidade (Invoice). O autor do vídeo prefere deixar a lista no serviço/gerador para manter a entidade limpa e focada apenas nas suas regras de negócio e atributos.
+
+```mermaid
+classDiagram
+    class InvoiceGenerator {
+        - List~InvoiceGeneratedAction~ actions
+        + InvoiceGenerator(List~InvoiceGeneratedAction~ actions)
+        + generate(ProvidedService providedService) Invoice
+        - simpleTax(double value) double
+    }
+
+    class InvoiceGeneratedAction {
+        <<interface>>
+        + process(Invoice invoice) void
+    }
+
+    class SendInvoiceEmailAction {
+        + process(Invoice invoice) void
+    }
+
+    class PersistInvoiceAction {
+        - InvoiceRepository repository
+        + PersistInvoiceAction(InvoiceRepository repository)
+        + process(Invoice invoice) void
+    }
+
+    class InvoiceRepository {
+        <<interface>>
+        + persist(Invoice invoice) void
+    }
+
+    class InvoiceRepositoryFake {
+        + persist(Invoice invoice) void
+    }
+
+    class InvoiceGeneratorFactory {
+        - InvoiceRepository repository
+        + InvoiceGeneratorFactory(InvoiceRepository repository)
+        + build() InvoiceGenerator
+    }
+
+    class MainInvoiceGenerator {
+        + main(String[] args) void$
+    }
+
+    class ProvidedService {
+        - double monthlyAmount
+        - String customer
+        + ProvidedService()
+        + ProvidedService(double monthlyAmount, String customer)
+        + getMonthlyAmount() double
+        + setMonthlyAmount(double monthlyAmount) void
+        + getCustomer() String
+        + setCustomer(String customer) void
+    }
+
+    class Invoice {
+        - int id
+        - double rawAmount
+        - double taxes
+        + Invoice(int id, double rawAmount, double taxes)
+        + Invoice(double rawAmount, double taxes)
+        + getId() int
+        + setId(int id) void
+        + getRawAmount() double
+        + setRawAmount(double rawAmount) void
+        + getTaxes() double
+        + setTaxes(double taxes) void
+        + getValorLiquido() double
+    }
+
+    %% Relacionamentos do Observer / Strategy
+    InvoiceGenerator --> "many" InvoiceGeneratedAction : possui (actions)
+    SendInvoiceEmailAction ..|> InvoiceGeneratedAction : implementa
+    PersistInvoiceAction ..|> InvoiceGeneratedAction : implementa
+    
+    %% Relacionamentos de persistência
+    PersistInvoiceAction --> InvoiceRepository : utiliza
+    InvoiceRepositoryFake ..|> InvoiceRepository : implementa
+    
+    %% Relacionamentos de Fabrica e Main
+    InvoiceGeneratorFactory ..> InvoiceGenerator : instancia (build)
+    InvoiceGeneratorFactory --> InvoiceRepository : depende de
+    MainInvoiceGenerator ..> InvoiceGeneratorFactory : utiliza
+    MainInvoiceGenerator ..> InvoiceRepositoryFake : utiliza
+    MainInvoiceGenerator ..> ProvidedService : utiliza
+
+    %% Relacionamentos com as Entidades
+    InvoiceGenerator ..> ProvidedService : recebe como parâmetro
+    InvoiceGenerator ..> Invoice : cria e retorna
+    InvoiceGeneratedAction ..> Invoice : recebe no process
+
+```
