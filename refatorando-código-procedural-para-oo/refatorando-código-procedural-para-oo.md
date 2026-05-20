@@ -643,3 +643,59 @@ classDiagram
     InvoiceGeneratedAction ..> Invoice : recebe no process
 
 ```
+
+## O problema da geração de notas fiscais: Event-based architectures
+### Contexto e Limitações
+* **Abordagem Anterior (Local):** Usar o padrão *Observer* ou listas de ações direto no código funciona bem para fluxos simples, pois reduz o acoplamento e facilita os testes.
+* **O Problema:** Em sistemas complexos (*enterprise*), onde uma ação engatilha várias outras em cadeia, centralizar tudo no código gera um fluxo confuso e difícil de manter.
+
+
+### A Solução: Arquitetura Baseada em Eventos
+* **Conceito:** Quando uma ação ocorre, o sistema gera um **Evento** (ex: `InvoiceGenerated`) contendo todos os dados relevantes (a nota fiscal) e o envia para uma fila (como **Kafka**).
+* **Produtor:** A classe que gera a nota apenas dispara o evento e encerra seu trabalho. Ela não sabe quem vai consumir a informação.
+* **Consumidores:** Componentes independentes escutam a fila e reagem ao evento de forma assíncrona (ex: um salva no banco de dados, outro envia o e-mail).
+
+
+### Trade-offs (Prós e Contras)
+* **Vantagens:** Desacoplamento extremo e facilidade para evoluir o sistema (adicionar novos consumidores sem mexer no código antigo).
+* **Desvantagens:** Requer infraestrutura pesada, torna o monitoramento complexo e dificulta a depuração (*debug*), já que os logs ficam espalhados e não há um *stack trace* único.
+
+
+### Conclusão
+Use soluções simples em código para fluxos de negócio comuns. Deixe a arquitetura baseada em eventos para cenários complexos que realmente justifiquem o custo da infraestrutura.
+
+Exemplo de código da aula:
+```java
+public class InvoiceGenerated {
+
+    private Invoice nf;
+
+    public InvoiceGenerated(Invoice nf) {
+        this.nf = nf;
+    }
+
+    public Invoice getNf() {
+        return nf;
+    }
+}
+
+
+public class InvoiceGenerator {
+
+    public InvoiceGenerator() {
+    }
+
+    public Invoice generate(ProvidedService providedService) {
+
+        double amount = providedService.getMonthlyAmount();
+
+        Invoice nf = new Invoice(amount, simpleTax(amount));
+
+        disparaEvento(new InvoiceGenerated(nf));
+
+        return nf;
+    }
+
+    private double simpleTax(double value) { return value * 0.06; }
+}
+```
