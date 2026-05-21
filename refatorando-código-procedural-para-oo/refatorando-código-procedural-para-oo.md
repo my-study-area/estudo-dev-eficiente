@@ -699,3 +699,49 @@ public class InvoiceGenerator {
     private double simpleTax(double value) { return value * 0.06; }
 }
 ```
+
+
+
+## O problema da geração de notas fiscais
+Resumo retomando sobre a refatoração e a possibilidade de usar a arquitetura baseada em eventos para casos mais complexos.
+
+
+
+## O problema do processador de pagamentos: Introdução ao problema
+- Exemplo de código inicial: https://github.com/forks-projects/refactoring-workshop/blob/main/workshop/src/main/java/paymentprocessor/PaymentProcessor.java
+- Refinamento: [refinamento_as_is_paymentprocessor](./refinamento_as_is_paymentprocessor.md)
+
+```mermaid
+classDiagram
+    class Billing {
+        -List~Payment~ payments
+        +getPayments() List~Payment~
+    }
+
+    class Installment {
+        -double amount
+        +Installment(double amount)
+        +getAmount() double
+    }
+
+    class Payment {
+        -double amount
+        +Payment(double amount)
+        +getAmount() double
+    }
+
+    class PaymentProcessor {
+        +process(List~Installment~ installments, Billing billing) void
+    }
+
+    Billing "1" o-- "*" Payment : possui
+    PaymentProcessor ..> Installment : itera sobre
+    PaymentProcessor ..> Billing : altera
+    PaymentProcessor ..> Payment : instancia
+```
+
+
+
+
+
+
