@@ -775,3 +775,15 @@ classDiagram
     Billing ..> Installment : consome
     PaymentProcessor ..> Billing : delega o processamento
 ```
+
+
+
+## O problema do processador de pagamentos: Resumo
+### O Erro Comum: Vazamento de Encapsulamento
+* **O Problema:** Permitir que o cliente manipule diretamente as estruturas internas de uma classe (como dar um `getLista().add()` na lista de pagamentos da classe `Billing`) destrói o encapsulamento.
+* **Consequência:** A classe perde o controle sobre seus próprios dados. Se uma nova regra de negócio surgir (ex: limite máximo de 10 pagamentos), ela terá que ser replicada manualmente com *Ctrl+F* por todo o sistema, tornando o código impossível de escalar.
+
+### A Solução: Controle Absoluto da Entidade
+* **Entidade Sagrada:** Toda classe/entidade deve ter controle absoluto sobre seus dados e como eles são manipulados.
+* **Centralização:** Modificações devem passar exclusivamente por métodos da própria classe (ex: um método `addPayment()`). Assim, regras de negócio são validadas em um único lugar, afetando o sistema inteiro de forma segura.
+* **Orientação a Objetos de Verdade:** Não trate classes apenas como meros sacos de dados editáveis por qualquer um. Proteja o estado do objeto para garantir a consistência das regras.
