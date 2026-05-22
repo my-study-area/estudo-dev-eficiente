@@ -742,6 +742,36 @@ classDiagram
 
 
 
+## O problema do processador de pagamentos: Information hiding
+- adicione o método addPayment na classe Billing para encapsular o acesso na lista de payments.
+- remova o método getPayments da classe Billing caso não tenha utilidade ou podemos retornar uma lista imutável e evitar que alguém com acesso a lista consiga alterar os payments
 
+```mermaid
+classDiagram
+    class Billing {
+        -List~Payment~ payments
+        +registerPayments(List~Installment~ installments) void
+        +getPayments() List~Payment~
+    }
 
+    class Installment {
+        -double amount
+        +Installment(double amount)
+        +getAmount() double
+    }
 
+    class Payment {
+        -double amount
+        +Payment(double amount)
+        +getAmount() double
+    }
+
+    %% PaymentProcessor atuando apenas como orquestrador que delega para Billing
+    class PaymentProcessor {
+        +process(List~Installment~ installments, Billing billing) void
+    }
+
+    Billing "1" *-- "*" Payment : gerencia e compõe
+    Billing ..> Installment : consome
+    PaymentProcessor ..> Billing : delega o processamento
+```
