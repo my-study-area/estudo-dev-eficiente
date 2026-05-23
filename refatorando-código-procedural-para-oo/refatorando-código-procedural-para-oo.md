@@ -787,3 +787,42 @@ classDiagram
 * **Entidade Sagrada:** Toda classe/entidade deve ter controle absoluto sobre seus dados e como eles são manipulados.
 * **Centralização:** Modificações devem passar exclusivamente por métodos da própria classe (ex: um método `addPayment()`). Assim, regras de negócio são validadas em um único lugar, afetando o sistema inteiro de forma segura.
 * **Orientação a Objetos de Verdade:** Não trate classes apenas como meros sacos de dados editáveis por qualquer um. Proteja o estado do objeto para garantir a consistência das regras.
+
+
+
+## O problema do quebra-cabeça: Introdução ao problema
+- Refinamento incial do projeto Puzzle: [](./refinamento_as_is_puzzle.md)
+
+```mermaid
+classDiagram
+    class Puzzle {
+        -int input
+        -int output
+        -List~Number~ queue
+        -Set~Integer~ visited
+        +Puzzle()
+        +generatePath(int input, int output) void
+        -searchForSolution() Number
+        -isEven(Number number) boolean
+        -foundTheOutput(Number number) boolean
+        -thereAreNumbersInTheQueue() boolean
+        -addRootToTheQueue() void
+        -addToQueue(Number... numbers) void
+        -formatOutput(Number solution) void
+        -multiplyByTwo(Number number) Number
+        -divideByTwo(Number number) Number
+        -plusTwo(Number number) Number
+        -removeFromTheQueue() Number
+    }
+
+    class Number {
+        -int value
+        -Number parent
+        +Number(int value, Number parent)
+        +getValue() int
+        +getParent() Number
+    }
+
+    Puzzle --> Number : manipula e gera
+    Number --> Number : parent
+```
