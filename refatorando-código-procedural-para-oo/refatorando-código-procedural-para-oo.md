@@ -826,3 +826,64 @@ classDiagram
     Puzzle --> Number : manipula e gera
     Number --> Number : parent
 ```
+
+
+
+
+
+## O problema do quebra-cabeça: Separação de responsabilidades
+- separe os métodos searchForSolution e formatOutput da classe Puzzle em classe apartadas
+- crie uma classe chamada PuzzleOutput e adicione o método formatOutput
+- altere a classe chamada Puzzle para PuzzleSolver. Altere o método generatePath para retornar um Number
+- crie uma classe chamada PuzzleRunner e adicione o PuzzleSolver e PuzzleOutput como parâmetros no construtor. Adicione o método solver como void e execute a solução e imprima a saída utilizando os objetos recebidos no construtor.
+
+
+```mermaid
+classDiagram
+    class PuzzleRunner {
+        -PuzzleSolver puzzleSolver
+        -PuzzleOutput puzzleOutput
+        +PuzzleRunner(PuzzleSolver puzzleSolver, PuzzleOutput puzzleOutput)
+        +solver(int input, int output) void
+    }
+
+    class PuzzleSolver {
+        -int input
+        -int output
+        -List~Number~ queue
+        -Set~Integer~ visited
+        +PuzzleSolver()
+        +generatePath(int input, int output) Number
+        -searchForSolution() Number
+        -isEven(Number number) boolean
+        -foundTheOutput(Number number) boolean
+        -thereAreNumbersInTheQueue() boolean
+        -addRootToTheQueue() void
+        -addToQueue(Number... numbers) void
+        -formatOutput(Number solution) void
+        -multiplyByTwo(Number number) Number
+        -divideByTwo(Number number) Number
+        -plusTwo(Number number) Number
+        -removeFromTheQueue() Number
+    }
+
+    class PuzzleOutput {
+        +PuzzleOutput()
+        ~formatOutput(Number solution) void
+    }
+
+    class Number {
+        -int value
+        -Number parent
+        +Number(int value, Number parent)
+        +getValue() int
+        +getParent() Number
+    }
+
+    PuzzleRunner --> PuzzleSolver : delega busca
+    PuzzleRunner --> PuzzleOutput : delega impressão
+    PuzzleSolver --> Number : manipula e gera
+    PuzzleOutput --> Number : percorre
+    Number --> Number : parent
+
+```
