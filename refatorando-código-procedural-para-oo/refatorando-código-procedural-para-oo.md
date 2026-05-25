@@ -956,3 +956,22 @@ classDiagram
     Number --> Number : parent
 
 ```
+
+
+
+## O problema do quebra-cabeça: Resumo
+### O Estado Inicial e o Problema
+
+* **Baixa Coesão:** A classe original (`PuzzleSolver`) acumulava duas funções distintas e complexas: a regra de negócio para resolver o quebra-cabeça e a lógica de formatação/geração da saída (ex: imprimir no console).
+* **Consequência:** Códigos misturados dificultam a leitura, tornam os testes unitários complexos e engessam o sistema para futuras mudanças.
+
+### O Processo de Refatoração
+
+* **Passo 1: Extração e Coesão:** A lógica de saída foi movida para uma classe própria. O resolvedor passou a focar apenas em solucionar o problema e retornar o resultado puro (uma estrutura de dados/número). Isso tornou o resolvedor altamente coeso e fácil de testar.
+* **Passo 2: Orquestração Simples:** Uma classe utilitária (como um `Runner`) passou a conectar as duas partes: ela pega o resultado gerado pelo resolvedor e o entrega para a classe responsável pela saída.
+* **Passo 3: Flexibilidade via Interfaces:** Para permitir novos tipos de saída (como salvar em arquivo além de apenas imprimir no console), foi extraída uma interface para a classe de saída.
+
+### Benefícios no Longo Prazo
+
+* **Inversão de Dependências:** O componente principal agora depende de uma abstração (interface) e não de uma implementação fixa. O sistema aceitará qualquer formato de saída que implemente o contrato.
+* **Extensibilidade:** Classes pequenas, focadas e isoladas facilitam a extensão do comportamento. O mesmo princípio poderia ser aplicado para criar interfaces para o próprio resolvedor, permitindo múltiplos algoritmos de resolução no futuro.
