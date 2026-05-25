@@ -2,15 +2,15 @@ package puzzle;
 
 public class PuzzleRunner {
     private final PuzzleSolver puzzleSolver;
-    private final PuzzleOutput puzzleOutput;
+    private final PuzzleOutput sysOutPuzzleOutput;
 
-    public PuzzleRunner(PuzzleSolver puzzleSolver, PuzzleOutput puzzleOutput) {
+    public PuzzleRunner(PuzzleSolver puzzleSolver, PuzzleOutput sysOutPuzzleOutput) {
         this.puzzleSolver = puzzleSolver;
-        this.puzzleOutput = puzzleOutput;
+        this.sysOutPuzzleOutput = sysOutPuzzleOutput;
     }
 
     public void solver(int input, int output) {
         Number number = puzzleSolver.generatePath(input, output);
-        puzzleOutput.formatOutput(number);
+        sysOutPuzzleOutput.formatOutput(number);
     }
 }

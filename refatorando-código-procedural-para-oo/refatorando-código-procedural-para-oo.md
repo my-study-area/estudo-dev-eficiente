@@ -887,3 +887,72 @@ classDiagram
     Number --> Number : parent
 
 ```
+
+
+
+## O problema do quebra-cabeça: Flexibilizando o código
+- renomeie a classe PuzzleOutput para SysOutPuzzleOutput
+- gere uma interface com base na classe SysOutPuzzleOutput com o nome PuzzleOutput com o método void formatOutput que recebe um Number
+- crie uma nova implementação de PuzzleOutput com o nome FilePuzzleOutput e implemente o método
+- atualiza a dependência de de PuzzleRunner para utilizar a interface PuzzleOutput
+
+```mermaid
+classDiagram
+    class PuzzleRunner {
+        -PuzzleSolver puzzleSolver
+        -PuzzleOutput sysOutPuzzleOutput
+        +PuzzleRunner(PuzzleSolver puzzleSolver, PuzzleOutput sysOutPuzzleOutput)
+        +solver(int input, int output) void
+    }
+
+    class PuzzleSolver {
+        -int input
+        -int output
+        -List~Number~ queue
+        -Set~Integer~ visited
+        +PuzzleSolver()
+        +generatePath(int input, int output) Number
+        -searchForSolution() Number
+        -isEven(Number number) boolean
+        -foundTheOutput(Number number) boolean
+        -thereAreNumbersInTheQueue() boolean
+        -addRootToTheQueue() void
+        -addToQueue(Number... numbers) void
+        -formatOutput(Number solution) void
+        -multiplyByTwo(Number number) Number
+        -divideByTwo(Number number) Number
+        -plusTwo(Number number) Number
+        -removeFromTheQueue() Number
+    }
+
+    class PuzzleOutput {
+        <<interface>>
+        +formatOutput(Number solution) void
+    }
+
+    class SysOutPuzzleOutput {
+        +formatOutput(Number solution) void
+    }
+
+    class FilePuzzleOutput {
+        +formatOutput(Number solution) void
+    }
+
+    class Number {
+        -int value
+        -Number parent
+        +Number(int value, Number parent)
+        +getValue() int
+        +getParent() Number
+    }
+
+    PuzzleRunner --> PuzzleSolver : delega busca
+    PuzzleRunner --> PuzzleOutput : delega impressão
+    SysOutPuzzleOutput ..|> PuzzleOutput : implementa
+    FilePuzzleOutput ..|> PuzzleOutput : implementa
+    PuzzleSolver --> Number : manipula e gera
+    PuzzleOutput ..> Number : recebe como parâmetro
+    SysOutPuzzleOutput --> Number : percorre
+    Number --> Number : parent
+
+```
