@@ -975,3 +975,6 @@ classDiagram
 
 * **Inversão de Dependências:** O componente principal agora depende de uma abstração (interface) e não de uma implementação fixa. O sistema aceitará qualquer formato de saída que implemente o contrato.
 * **Extensibilidade:** Classes pequenas, focadas e isoladas facilitam a extensão do comportamento. O mesmo princípio poderia ser aplicado para criar interfaces para o próprio resolvedor, permitindo múltiplos algoritmos de resolução no futuro.
+
+
+## Finalizando o curso: Resumo

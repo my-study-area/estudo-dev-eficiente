@@ -1,10 +1,7 @@
 # estudo-dev-eficiente
 estudo-dev-eficiente
-
-Link: https://dev-eficiente.memberkit.com.br/
-Google doc: https://docs.google.com/document/d/18j3Z5PUNkN1zMayhOvj2wgp7v5u97hBHyEXxKv2HuuA/edit?tab=t.0
-
-Repositórios: https://github.com/asouza?tab=repositories
+- Link: https://dev-eficiente.memberkit.com.br/
+- Repositórios: https://github.com/asouza?tab=repositories
 
 # Jornada Dev Eficiente
 ## Bem vindo(a) à jornada Dev Eficiente
@@ -65,6 +62,10 @@ Repositórios: https://github.com/asouza?tab=repositories
 ### Curso: Clean Architecture na prática e não no Hype
 - [Clean Architecture na prática e não no Hype](./clean-architecture-na-pratica-e-nao-no-hype/clean-architecture-na-pratica-e-nao-no-hype.md)
 - [Certificado](https://dev-eficiente.memberkit.com.br/certificates/QAg8mw)
+
+### Curso: Refatorando código procedural para OO
+- [Refatorando código procedural para OO](./refatorando-código-procedural-para-oo/refatorando-código-procedural-para-oo.md)
+- [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/5b3f6a44-be76-4d1d-95df-2d29564ae279.pdf)
 
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
