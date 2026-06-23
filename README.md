@@ -67,6 +67,10 @@ estudo-dev-eficiente
 - [Refatorando código procedural para OO](./refatorando-código-procedural-para-oo/refatorando-código-procedural-para-oo.md)
 - [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/5b3f6a44-be76-4d1d-95df-2d29564ae279.pdf)
 
+### Curso: Arquitetura de sistemas enterprise
+- [Arquitetura de sistemas enterprise](./arquitetura-sistemas-enterprise/arquitetura-sistemas-enterprise.md)
+- [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/29c6b2a3-a88a-49d4-b3d5-10d74e5532a0.pdf)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
