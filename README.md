@@ -75,6 +75,10 @@ estudo-dev-eficiente
 - [Resiliência muito além do Retry](./resiliencia-muito-alem-do-retry.md)
 - [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/32ba94e3-4d36-4f6e-8381-95dba895fc9f.pdf)
 
+### Curso: Trabalhando com Agentes de Código
+- [Trabalhando com Agentes de Código](./trabalhando-com-agentes-de-codigo.md)
+- [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/db3d3fd7-db1f-4e01-b5c5-c3a707848c54.pdf)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
