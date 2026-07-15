@@ -35,6 +35,45 @@ O autor recomenda avaliar constantemente os fluxos de trabalho atuais para ident
 ## Leia antes um resumo de tudo que você vai ver
 https://plataforma.contrateumdeveficiente.com/arquivos-aulas/trabalhando-com-agentes-de-codigo-blink.pdf
 
+### Práticas
+- **Experimente**: Da próxima vez que ler “a forma certa de usar agentes”, trate como uma
+hipótese, não como verdade. Rode o experimento no seu contexto e meça o resultado
+antes de adotar
+- **Experimente**: Escolha uma preferência de design que o agente sempre erra e adicione
+ao seu arquivo de contexto um exemplo concreto do certo e do errado. Veja se a próxima
+saída muda.
+- **Experimente**: Liste as verificações que você hoje pede ao modelo. Marque quais já têm
+ferramenta determinística pronta (cobertura, lint, análise estática) e migre essas para
+script.
+- **Experimente**: Ao terminar a próxima tarefa, pergunte ao agente o que ele aprendeu na
+interação e decida, com consciência, se vale registrar isso no seu arquivo de contexto.
+- **Experimente**: Configure um único hook de pré-commit para a verificação que mais te
+dá trabalho revisar manualmente. Comece pelo determinístico — cobertura de testes é
+um ótimo primeiro candidato.
+- **Experimente**: Antes de direcionar uma tarefa, pergunte-se: “a força do modelo me leva
+para onde eu quero?” Se sim, economize esforço e deixe fluir. Se não, prepare contexto e
+exemplos para a força contrária.
+- **Experimente**: Na próxima divergência pequena com o agente, pergunte se ela realmente
+machuca o sistema. Se a resposta for não e você tem guard rails cobrindo, deixe passar
+e siga em frente.
+- **Experimente**: Antes de pedir implementação, sempre passe pelo modo de planejamento
+e revise o plano. É o ponto mais barato para corrigir o rumo — antes de qualquer linha
+de código sair.
+- **Experimente**: Reserve um tempo para ler, de ponta a ponta, a documentação oficial
+do agente que você usa todo dia. Anote ao menos uma feature que você não conhecia e
+teste ainda nesta semana.
+- **Experimente**: Olhe para uma tarefa que você adiou achando que “não dá tempo”. Trate
+o agente como um liderado: escreva um bom input, deixe-o executar e revise só a entrada.
+É assim que o jeito de trabalhar começa a se transformar.
+
+
+### Conselhos práticos
+Aqui estão três coisas que você pode começar a fazer hoje:
+1. **Trate tudo como experimento**: antes de adotar qualquer "regra" sobre agentes, levante-a como hipótese, teste no seu contexto e meça o resultado.
+2. **Invista na entrada, não na revisão**: capriche no prompt de intenção, passe pelo modo de planejamento e revise o plano antes de qualquer código sair.
+3. **Crie um guard rail por vez**: configure um hook de pré-commit para a verificação que mais te dá trabalho — começando pelas determinísticas, como cobertura de testes.
+
+**Comece pequeno**: Escolha apenas uma das ações acima e comprometa-se a praticá-la nesta semana. Iteração consistente, com aprendizado a cada ciclo, é o que transforma o jeito de trabalhar.
 
 
 
