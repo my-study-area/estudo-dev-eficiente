@@ -79,6 +79,10 @@ estudo-dev-eficiente
 - [Trabalhando com Agentes de Código](./trabalhando-com-agentes-de-codigo.md)
 - [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/db3d3fd7-db1f-4e01-b5c5-c3a707848c54.pdf)
 
+### Curso: Pilares da Escalabilidade: Os 3 pilares para escalar sistemas distribuídos
+- [Pilares da Escalabilidade: Os 3 pilares para escalar sistemas distribuídos](./pilares-escalabilidade.md)
+- [Certificado](./)
+
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
 - [desafio-2: Implementando um Mercado Livre](https://github.com/forks-projects/seed-desafio-mercado-livre)
