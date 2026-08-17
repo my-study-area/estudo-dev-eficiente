@@ -642,3 +642,71 @@ três pilares:
   * **Design para Falhas:** Para atingir alta velocidade em escala, é necessário abandonar o modelo tradicional e construir sistemas desacoplados (como microsserviços) compostos por **componentes efêmeros e assumidamente quebrados**, garantindo alta disponibilidade mesmo diante de falhas de infraestrutura.
 </details>
 
+
+
+
+
+
+## Trade-offs: Introdução
+- https://assets.memberkit.com.br/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDIyNzMzMywicHVyIjoiYmxvYl9pZCJ9fQ==--f1b5114ca0b53432ad64dae2a21f35ab3b404150/2025-06-09%20-%20Slides%20-%20Cap%2010%20-%20Trade-offs.pdf
+- [Slides da apresentação](./pilares-escalabilidade/2025-06-09%20-%20Slides%20-%20Cap%2010%20-%20Trade-offs.pdf)
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  ### Trade-offs na Arquitetura de Software: Conceito e Consciência
+
+  O conceito de ***trade-off*** e a necessidade de exercer a tomada de decisões conscientes na arquitetura e no design de software — especialmente ao adotar técnicas e pilares para alta performance e escalabilidade — são estruturados nos seguintes pontos:
+
+  ---
+
+  ### **1. O Conceito de Trade-off em Arquitetura**
+
+  * **Equilíbrio Consciente:** *Trade-off* é o balanço entre o que se deseja obter e aquilo de que se está disposto a abrir mão.
+
+
+  * **Regra Fundamental:** Nenhuma solução ou técnica de escalabilidade vem "de graça"; para se ganhar determinado benefício (como performance ou vazão), inevitavelmente perde-se algo em contrapartida.
+
+
+  * **O Papel do Arquiteto:** Uma boa decisão arquitetural não consiste em encontrar a "solução perfeita", mas em compreender claramente quais são as perdas e ganhos associados a cada escolha.
+
+
+  * **Alerta sobre Soluções "Sem Perdas":** Se um desenvolvedor ou arquiteto não consegue identificar os *trade-offs* de uma solução, significa que ele simplesmente não está enxergando o que está perdendo.
+
+
+
+  ---
+
+  ### **2. Os Perigos da Busca Insana por Performance**
+
+  * **Sensibilidade em Escala:** Ao buscar alta velocidade e escala, os sistemas tornam-se ainda mais sensíveis e sujeitos aos impactos negativos dos *trade-offs*.
+
+
+  * **Trabalhar em Alta Concorrência:** Operar em alta escala implica lidar com alta concorrência, o que eleva drasticamente a complexidade do sistema.
+
+
+  * **Alerta de Brian Goetz (Arquiteto-chefe da linguagem Java):**
+  > *"Quando você troca segurança (safety) por performance, você pode acabar sem nenhuma das duas."*
+  > 
+
+
+  * **Risco de Apressamento:** Sacrificar a segurança do código ou da aplicação em busca de métricas de performance pode resultar na degradação de ambas as frentes.
+
+
+
+  ---
+
+  ### **3. Avaliação de Trade-offs no Contexto do Projeto**
+
+  * **Relevância Contextual:** Ter *trade-offs* não invalida uma solução; a questão crítica é avaliar se esse impacto negativo é **significativo ou não no seu contexto específico**.
+
+
+  * **Análise Temporal de Impactos:** É indispensável mapear se as desvantagens aceitas se tornarão um problema a **curtíssimo, curto, médio ou longo prazo**.
+
+
+  * **Próximos Passos:** Essa mentalidade analítica deve ser aplicada diretamente aos três pilares da escalabilidade (**Caching**, **Processamento Assíncrono** e **Balanceamento de Carga**) para identificar quais perdas cada um introduz no ecossistema da aplicação.
+</details>
+
+
+
+
