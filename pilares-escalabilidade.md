@@ -710,3 +710,104 @@ três pilares:
 
 
 
+## Trade-offs: As desvantagens ao adotar o Pilar de Caching
+Performance vs consistency
+- mais distante da verdade, maior a performance
+- em contrapartida, menor consistência
+
+Um cache próximo do cliente aumenta a performance, mas também aumenta a complexidade na consistência de dados, invalidar o cache para manter a informação atualizada em relação ao banco de dados.
+
+Latency vs throughput
+- quanto mais distribuído o cache, maior o throughput 
+- em contrapartida, maior latência
+
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  ### Resumo Detalhado: Trade-offs e Desvantagens do Pilar de Caching
+
+  A adoção de soluções de *caching* (memória de acesso rápido) traz melhorias expressivas de performance e alívio de infraestrutura. No entanto, a aplicação dessa técnica introduz *trade-offs* técnicos e arquiteturais críticos que afetam a consistência dos dados, a latência e a complexidade de gerenciamento.
+
+  ---
+
+  ### **1. Trade-off 1: Performance vs. Consistência**
+
+  A relação entre a velocidade de acesso ao *cache* e a fidelidade dos dados é inversamente proporcional: **quanto mais distante da fonte da verdade (banco de dados), maior é a performance do *cache*, mas menor é a sua consistência.**
+
+  ```
+                      +---------------------------------------+
+                      |        MAIOR PERFORMANCE              |
+                      |       (Menor Consistência)            |
+                      +-------------------+-------------------+
+                                          |
+                                    [ Browser / Client ]
+                                          |
+                                    [ Presentation / API ]
+                                          |
+                                    [ Business / Backend ]
+                                          |
+                                    [ Persistence / DB ]
+                                          |
+                      +-------------------+-------------------+
+                      |         MAIOR CONSISTÊNCIA            |
+                      |       (Menor Performance)             |
+                      +---------------------------------------+
+
+  ```
+
+  * **Cache Próximo à Fonte da Verdade (Backend / DB):**
+    * **Vantagens:** Ficar na camada de persistência (ex: *Second-Level Cache* do ORM/Hibernate) ou de negócio facilita a sincronização e a invalidação, pois os dados estão diretamente integrados ao banco de dados.
+    * **Desvantagens:** Entrega uma ganho de performance moderado em comparação às camadas de ponta.
+
+
+  * **Cache Distante da Fonte da Verdade (Controller / Browser / CDN):**
+    * **Vantagens:** Oferece altíssima performance e respostas quase instantâneas ao salvar diretamente a resposta final (*endpoints* REST, *Spring Cache*) ou ao manter o dado no navegador do usuário.
+    * **Desvantagens:** Torna o controle e a invalidação extremamente difíceis, podendo levar o usuário a visualizar dados desatualizados e tomar decisões incorretas.
+
+
+
+
+  #### **O Desafio da Invalidação em Sistemas Distribuídos (Microsserviços)**
+  * Citação clássica da Ciência da Computação: *"Existem apenas dois problemas difíceis na Ciência da Computação: dar nome às coisas e invalidar cache."*
+  * **Redundância e Inconsistência:** Em microsserviços autônomos (ex: Serviço de Clientes e Serviço de Entregas), o serviço consumidor pode criar um *cache* local para continuar operando mesmo se o serviço de clientes falhar ou a rede cair (resiliência e isolamento).
+  * **Impacto no Negócio:** Se o cliente alterar seu endereço no Serviço de Clientes, a fonte da verdade se atualiza, mas o *cache* local do Serviço de Entregas continua com o dado antigo. Sem um mecanismo eficiente de notificação ou invalidação, operações custosas ou incorretas são executadas (ex: entregas enviadas para endereços errados).
+
+
+
+  ---
+
+  ### **2. Trade-off 2: Latência vs. Throughput (Vazão)**
+
+  Ao dimensionar a arquitetura do *cache*, deve-se escolher entre soluções em memória local (*In-Memory*) ou soluções distribuídas (*Distributed Cache*): **quanto mais distribuído o cache, maior é o throughput (vazão), porém maior é a latência.**
+
+  | Categoria | *In-Memory Cache* (Cache Local) | *Distributed Cache* (ex: Redis Cluster) |
+  | --- | --- | --- |
+  | **Localização** | Roda dentro do próprio processo da aplicação (JVM). | Processos e instâncias isolados rodando na rede.   |  
+  | **Latência** | **Extremamente Baixa** (acesso direto na memória RAM do processo). | **Mais Alta** (introduz *I/O* e overhead de tráfego de rede).|
+  | **Throughput (Vazão)** | Limitado pela capacidade e concorrência da máquina local. | **Altíssimo** (permite adicionar múltiplos nós ao cluster). | 
+  | **Complexidade** | Baixa complexidade de infraestrutura. | Requer gerenciamento de *clusters* e bibliotecas de rede. |
+
+
+  #### **O Perigo da Escala Vertical e do *Garbage Collector* (GC)**
+  * Tentar contornar os limites do *In-Memory Cache* aumentando a memória RAM da máquina (ex: alocar 30 GB de *Heap* da JVM para *cache* local) gera o risco do efeito **Stop-the-World**.
+  * Quando o *Garbage Collector* roda para rastrear e limpar gigabytes de memória, ele pausa a aplicação. Essa pausa pode durar segundos, simulando um particionamento de rede.
+  * **Risco de Cascata:** Ferramentas de orquestração (como o Kubernetes) podem interpretar que a aplicação travou devido à ausência de resposta durante a coleta de memória e derrubar a instância, agravando o problema de disponibilidade.
+
+
+
+  #### **A Solução com Cache Distribuído (*Stateless* + Redis)**
+  * Separa-se a arquitetura em dois *clusters*:
+    1. **Aplicação *Stateless*:** Nós leves da JVM (2 a 4 GB de *Heap*) focados puramente em processamento.
+    2. **Cluster de Cache Distribuído:** Instâncias dedicadas (ex: Redis com 64 GB+) conectadas via rede.
+  * **Efeito na Latência:** Ao substituir o acesso à RAM local por chamadas de rede no Redis, o tempo de resposta pode subir de **5-10 ms** para **20-40 ms**. Contudo, ganha-se capacidade ilimitada de escala de *throughput* e facilidade de gerenciamento.
+
+
+
+  ---
+
+  ### **3. Conflito em Altas Escalas**
+  Performance (baixa latência) e escala (alto *throughput*) possuem uma relação estreita, mas entram em conflito em volumes elevados. Em determinando ponto do projeto, a engenharia do sistema precisa decidir conscientemente se irá **otimizar para mínima latência** (privilegiando acessos locais) ou **otimizar para máxima vazão** (aceitando o custo da latência de rede em caches distribuídos).
+
+</details>
+
