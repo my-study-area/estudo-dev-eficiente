@@ -811,3 +811,67 @@ Latency vs throughput
 
 </details>
 
+
+
+
+## Trade-offs: O que você perde ao usar o Pilar de Processamento Assíncrono
+### Mudança no workflow
+Client-side precisa se adaptar ao modelo assíncrono e trabalhar um pouco mais para obter uma resposta.
+- requisições comuns que vão de ponta a ponto desde a requisição do usuário, chegando no banco de dados e retornando a resposta para o usuário é lenta
+- realizar requisições utilizando um broker como o RabbitMQ é rápido, mas paga o preço utilizando uma segunda requisição para verificarmos se a requisição já foi processada
+- aumenta a complexidade
+
+### Fire and Forget Regret
+Ignorar o feedback do fluxo de envio é como maximizamos o throughput ao custo de perdas de mensagens.
+- existem casos que não precisamos da resposta neste momento. Nem mesmo precisamos ter a certeza que a requisição foi finalizada com sucesso. Neste cenário onde a requisição não é crítica é uma exemplo de uso, por exemplo, um curtir num postagem de rede social
+- também é possível diminuir ainda mais a latência, já que no RabbitMQ utilizamos a rede para se comunicar que mais lenta que a memória, pode-se utilizar uma thread para envia o evento para fila RabbitMQ e já devolver uma resposta de sucesso, sem aguardar a resosta do broker. Neste caso temos os mesmos problemas causa de filas em memória.
+
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  Aqui está um resumo detalhado da aula sobre os **trade-offs do processamento assíncrono**, focando nos dois principais desafios apresentados para desenvolvedores ao escalarem aplicações.
+
+  ---
+
+  ## 1. Mudança no Workflow (A Experiência do Cliente)
+
+  Ao migrar de um modelo síncrono para o assíncrono para ganhar escalabilidade e performance (*throughput*), o fluxo de trabalho do cliente (frontend, mobile ou browser) precisa se adaptar, pois o modelo deixa de ser natural (dar uma requisição e esperar a resposta imediata).
+
+  * **O Modelo Síncrono Tradicional:** O usuário solicita algo pesado (ex: gerar a fatura de um cartão de crédito, que exige consultas complexas ao banco de dados e cálculos). O backend processa tudo e retorna um `HTTP 200` com o PDF pronto. No entanto, isso gera alta latência e baixa escalabilidade sob carga pesada.
+  * **O Modelo Assíncrono com Broker (Ex: RabbitMQ):**
+  * A aplicação recebe o pedido, publica uma mensagem no broker e retorna imediatamente um `HTTP 202 (Accepted)` contendo apenas um **ID de transação (ticket)**.
+  * O cliente precisa adotar um novo passo no fluxo: **fazer *polling*** (consultar periodicamente o backend com aquele ID para saber se o arquivo ficou pronto) ou aguardar uma notificação (como um e-mail).
+
+
+  * **O Impacto:** Divide-se o que era uma operação simples em duas ou mais etapas (requisição e verificação posterior). Isso aumenta a complexidade de desenvolvimento, da arquitetura, da testabilidade e dificulta o *troubleshooting* de bugs.
+
+  ---
+
+  ## 2. *Fire and Forget* ou *Fire and Regret* (Ignorar o Feedback)
+
+  Muitas vezes, desenvolvedores buscam maximizar o *throughput* ao extremo, abrindo mão da garantia de entrega das mensagens.
+
+  * **O Problema do *Fire and Forget* em Memória:**
+  * Exemplo: Em uma tela de "Esqueci minha senha", o sistema gera um token e precisa enviar um e-mail (operação lenta via SMTP). Para não travar a requisição, o desenvolvedor usa uma *thread pool* local (em memória, como `@Async` no Spring ou threads avulsas).
+  * A aplicação responde instantaneamente ao usuário, mas a execução real ocorre em background. Se ocorrer um *crash* no servidor, queda de energia ou falta de memória (*Out of Memory*), **a tarefa em memória é perdida**. O usuário fica esperando eternamente por um e-mail que nunca chegará.
+
+
+  * **A Tentativa de Melhoria com Brokers:**
+  * O uso de um broker durável (como RabbitMQ) garante mais resiliência, pois a mensagem é gravada em disco.
+
+
+  * **O Extremo "Tirar Leite de Pedra" (*Fire and Regret*):**
+  * Para eliminar até mesmo a pequena latência de rede de enviar a mensagem ao RabbitMQ, alguns desenvolvedores colocam o envio ao broker dentro de uma *thread pool* local assíncrona.
+  * Com isso, a aplicação finge que enviou, mas se houver uma falha de rede ou o broker recusar a mensagem enquanto ela está pendente na *thread* em memória, **a mensagem é perdida de vez** sem tratamento de erro ou mecanismo de *retry*.
+
+
+  * **Quando usar?** O *Fire and Forget* agressivo só é aceitável em cenários onde a perda de dados é tolerável (como a contabilização de *likes* em uma rede social). Em sistemas corporativos críticos (como pagamentos ou entregas), correr esse risco pode ser desastroso — transformando o *Fire and Forget* em um **"dispare e se arrependa" (*Fire and Regret*)**.
+
+  ---
+
+  ### Conclusão
+
+  Os trade-offs do processamento assíncrono vão muito além da latência e consistência de arquitetura: eles impactam diretamente os **custos de desenvolvimento, a complexidade de manutenção** e exigem decisões conscientes sobre **confiabilidade e perda de dados**.
+</details>
+
