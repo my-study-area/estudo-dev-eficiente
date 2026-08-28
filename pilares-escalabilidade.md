@@ -875,3 +875,77 @@ Ignorar o feedback do fluxo de envio é como maximizamos o throughput ao custo d
   Os trade-offs do processamento assíncrono vão muito além da latência e consistência de arquitetura: eles impactam diretamente os **custos de desenvolvimento, a complexidade de manutenção** e exigem decisões conscientes sobre **confiabilidade e perda de dados**.
 </details>
 
+
+
+
+## Trade-offs: O Pilar de Load balancing e novas formas de quebrar seus sistemas
+### latency vs consistency
+> Diminuir a latência muitas vezes significa abrir mão de uma consistência (mais) forte.
+- numa aplicação que realizar persistência no banco de dados, divide-se a carga de trabalho em leitura e escrita. Normalmente essa carga segue uma proporção de leitura para escrita de 80/20 ou 70/30. A escrita fica no banco primário que possui replicas de somente leitura e o tempo de sincronização pode não ser imediata, mas com o preço de uma consistência eventual
+- consistência eventual
+
+### coordination & race condition
+> Distribuir a carga pode significar mais throughput ao custo de novas formas de quebrar o sistema
+- problema de concorrência
+- na tentativa de aumentar o throughput, adiciona-se mais instâncias horizontalmente o que pode causar problemas de sobrescrita de valores se forem realizadas num instante muito próximo entre as requisições.
+- a anotação sincronized realiza um lock local, mas somente ocorre dentro de uma única instância que causa problemas ao realizar uma escala horizontal.
+```java
+@Component
+public class ProcessadorDeComprasJob {
+
+    @Scheduled(...)
+    public synchronized void execute() {
+        // executa lógica de negócio
+    }
+}
+```
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  Aqui está um resumo detalhado da aula **"Trade-offs: O Pilar de Load Balancing e novas formas de quebrar seus sistemas"**, estruturado de forma clara e organizada:
+
+  ---
+
+  ## 🎯 Visão Geral
+
+  A aula aborda os **trade-offs** (compensações) envolvidos na implementação de balanceamento de carga e escala horizontal em sistemas distribuídos. O foco principal é mostrar que, embora essas estratégias tragam ganhos de performance e vazão (*throughput*), elas introduzem novos desafios e formas de falha que os desenvolvedores precisam conhecer.
+
+  ---
+
+  ## ⚖️ Trade-off 1: Latência vs. Consistência
+
+  O primeiro dilema discutido trata de como diminuir a latência do sistema frequentemente exige abrir mão de uma consistência de dados mais forte.
+
+  * **O Cenário de Leitura e Escrita:** A maioria dos sistemas corporativos possui um *workload* (carga de trabalho) desproporcional, com muito mais operações de **leitura do que de escrita** (geralmente uma proporção de 70/30 ou 80/20).
+  * **O Uso de Réplicas:** Para não sobrecarregar uma única instância de banco de dados, utiliza-se um banco primário (responsável por leituras e escritas) e várias **réplicas** (cópias do banco primário focadas exclusivamente em receber leituras).
+
+  ### 1. Replicação Síncrona (Alta Consistência, Maior Latência)
+
+  * **Como funciona:** Quando a aplicação envia um comando de escrita (Insert/Update/Delete) para o banco primário, ele bloqueia a aplicação e só confirma a operação após propagar e gravar a alteração **em todas as réplicas**.
+  * **Vantagem:** O sistema garante **consistência imediata**. A aplicação consegue ler suas próprias escritas instantaneamente em qualquer réplica.
+  * **Desvantagem:** Alta latência, pois a aplicação fica bloqueada esperando a sincronização completa.
+
+  ### 2. Replicação Assíncrona (Baixa Latência, Consistência Eventual)
+
+  * **Como funciona:** A aplicação escreve no banco primário, que libera a resposta imediatamente e despacha as atualizações para as réplicas de forma **assíncrona**.
+  * **Vantagem:** Menor latência e maior velocidade, mantendo o fluxo ágil.
+  * **Desvantagem:** Introduz a **consistência eventual** (*eventual consistency*). Se a aplicação tentar ler de uma réplica antes que ela receba a atualização, os dados estarão desatualizados.
+  * **Exemplo prático:** Um usuário adiciona um item ao carrinho de compras, a tela recarrega imediatamente buscando dados de uma réplica que ainda não foi sincronizada, e o usuário vê o carrinho vazio, gerando frustração e comportamentos inesperados.
+
+  ---
+
+  ## ⚡ Trade-off 2: Coordenação e Condições de Corrida (*Race Conditions*)
+
+  O segundo dilema aborda como a distribuição de carga através da escala horizontal pode aumentar o *throughput*, mas abre espaço para sérios problemas de concorrência.
+
+  * **O Cenário do Job em Background:** Imagine uma aplicação que executa uma tarefa agendada (*Job*) a cada 1 minuto (usando `@Scheduled` no Spring Boot) para processar pedidos pendentes em uma tabela do banco de dados.
+  * **O Problema da Escala Horizontal:** Se a aplicação roda em apenas uma máquina, o Job processa os registros sequencialmente. No entanto, se escalarmos para **duas ou mais instâncias** da aplicação para obter redundância ou maior vazão, **ambas as máquinas executarão o mesmo Job ao mesmo tempo**, disparando consultas idênticas e tentando processar os mesmos pedidos de forma duplicada.
+  * **Por que o `synchronized` do Java não resolve?** A cláusula `synchronized` garante exclusão mútua apenas dentro de uma única Máquina Virtual Java (JVM). Como temos instâncias rodando em máquinas separadas com *locks* locais e independentes que não se comunicam entre si, o problema persiste.
+  * **Consequências:** Processar a mesma compra duas vezes pode gerar cobranças duplicadas, bugs de concorrência difíceis de rastrear e severos problemas de consistência de dados.
+
+  ---
+
+  > 💡 **Conclusão:** Aumentar a distribuição e o balanceamento de carga com a escala horizontal traz grandes benefícios de desempenho, mas exige atenção redobrada aos arquitetos e desenvolvedores, pois introduz complexidades invisíveis a priori, como a gestão de consistência de dados e o controle de concorrência entre múltiplos nós.
+</details>
+
