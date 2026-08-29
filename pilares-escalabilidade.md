@@ -1000,4 +1000,152 @@ Pilares da esclabilidade:
 - balanceamento de cargas: é além do balanceamento de carga
 
 
+## Ampliando as perspectivas no uso de Caching
+- podemos aplicar em nível de backend, frontend ou infraestrutura
+
+### In-memory cache: simples
+- solução simples e ingênua
+- sem limite de quantidade de elementos no cache
+```java
+import java.util.concurrent.ConcurrentHashMap; Simple and naive Cache Implementation
+@Component 
+public class CacheStore {
+ private static final Map<String, ExpensiveObject> cache;
+ @PostConstruct
+ public void initCache() {
+ // logic to create the cache and warm it up
+ this.cache = new ConcurrentHashMap<>(); //sem limite de tamanho
+ }
+ public ExpensiveObject get(String key) {
+ ExpensiveObject value = cache.computeIfAbsent(key, (key) -> {
+ // logic to create the expensive object
+ return new ExpensiveObject(key, ...);
+ });
+ return value;
+ }
+}
+
+```
+
+
+### In-memory cache - Google guava cache implementation
+- limita o tamanho do cache
+- define o tempo de expirar
+```java
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+public class CacheStore {
+  private static final Cache<String, ExpensiveObject> cache; //cache da lib
+ @PostConstruct
+ public void initCache() {
+   // logic to create the cache and warm it up
+ this.cache = CacheBuilder.newBuilder()
+ .maximumSize(100_000) //limita o tamanho máximo
+ .expireAfterWrite(1, TimeUnit.DAYS) //tempo de expirar
+ .build();
+ }
+ public ExpensiveObject get(String key) {
+   ExpensiveObject value = cache.get(key, () -> {
+     // logic to create the expensive object
+ return new ExpensiveObject(key, ...);
+ });
+ return value;
+ }
+}
+```
+
+### Distributed cache - PostgreSQL Materialized View Implementation
+- view materializada
+- atualiza o cache da view
+- atualiza sem realizar o bloqueio na view. Mais demorado
+
+```sql
+CREATE MATERIALIZED VIEW sales_summary AS
+ SELECT seller_no as seller, 
+ invoice_date as sold_at,
+ sum(invoice_amt) as sales_amount
+ FROM invoice
+ WHERE invoice_date < CURRENT_DATE
+GROUP BY
+ seller_no,
+ invoice_date;
+
+CREATE UNIQUE INDEX sales_summary_seller
+ ON sales_summary (seller, sold_at);
+
+SELECT s.seller, 
+ s.sold_at,
+ s.sales_amount
+ FROM sales_summary s
+ WHERE s.sold_at >= CURRENT_DATE - 7 
+ORDER BY
+ s.sold_at;
+
+REFRESH MATERIALIZED VIEW sales_summary; //atualiza view
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY sales_summary; //atualiza e não bloqueia a view, mas demorada
+```
+
+
+### Distributed cache - Content Delivery Network (CDN)
+Outra forma de realizar um cache distribuído é através do Content Delivery Network (CDN). Comum em aplicações que possuem um frontend com diversos megas de html, css e js.
+- cache em nível de infraestrutura
+
+> Lembrando, sempre devemos fazer o trade-off entre performance (latência) e consistência. Quanto mais perto o cache do usuário, menor a latência com o preço de uma persistência eventual
+
+<details>
+  <summary>Gerado por IA</summary>
+  Aqui está um resumo detalhado dos principais pontos abordados no vídeo sobre **ampliar as perspectivas no uso de cache**:
+
+  ---
+
+  ## 🚀 Visão Geral
+
+  O vídeo propõe ir além do tradicional cache de backend (como o Redis) e explorar o uso de cache em **diferentes camadas da aplicação** (memória, banco de dados e infraestrutura). O objetivo é fornecer insights sobre novas possibilidades de implementação e arquitetura, avaliando trade-offs como performance e consistência.
+
+  ---
+
+  ## 1. Cache em Memória (In-Memory Cache)
+
+  * **Abordagem Simples e Ingênua (`ConcurrentHashMap`):**
+  * Utiliza um mapa thread-safe nativo do Java (`ConcurrentHashMap`) em uma classe gerenciada pelo Spring (`Singleton`).
+  * Ideal para aplicações simples sem grandes volumes de dados ou problemas críticos de escala.
+  * **Problema:** Não possui limite de tamanho, políticas de invalidação (TTL - *Time to Live*) ou *eviction*, o que pode causar estouro de memória (**OutOfMemory**) e sobrecarregar o *Garbage Collector*.
+
+
+  * **Abordagem Robusta (Com Biblioteca - Google Guava / Caffeine):**
+  * Recomenda-se nunca implementar a lógica complexa de cache do zero, adotando bibliotecas maduras.
+  * Permite configurar parâmetros vitais, como o **número máximo de entradas** (ex: 100.000 itens) e políticas de substituição automática (como o algoritmo **LRU** - *Least Recently Used*), além de expiração por tempo.
+  * O objetivo é buscar um **Cache Hit** (taxa de acerto) superior a **90%**.
+
+
+
+  ---
+
+  ## 2. Cache no Banco de Dados: Views Materializadas
+
+  Quando não é possível usar cache distribuído na aplicação ou em ambientes clusterizados, o próprio banco de dados relacional (como o PostgreSQL) pode atuar como camada de cache.
+
+  * **O que são:** Diferente das *views* normais (que apenas encapsulam queries e rodam toda vez), as **views materializadas** executam a consulta pesada (ex: relatórios de e-commerce com milhões de linhas) e armazenam o resultado fisicamente em disco, como uma tabela temporária.
+  * **Vantagens:** As consultas seguintes são executadas de forma extremamente rápida, permitindo inclusive a criação de índices adicionais.
+  * **Invalidação e Atualização:**
+  * Pode ser feita por meio de rotinas (*cron jobs*) executando o comando `REFRESH MATERIALIZED VIEW`.
+  * O parâmetro `CONCURRENTLY` pode ser usado para atualizar os dados em segundo plano sem bloquear a leitura dos usuários, garantindo disponibilidade contínua (com eventual consistência).
+
+
+
+  ---
+
+  ## 3. Cache na Infraestrutura: CDN (*Content Delivery Network*)
+
+  Voltado para aplicações web e frontends modernos, focado em otimizar a distribuição de ativos estáticos (HTML, CSS, JavaScript).
+
+  * **Funcionamento:** Em vez de forçar usuários geograficamente distantes a baixarem dezenas de megabytes diretamente do servidor de origem, a aplicação distribui os assets estáticos em servidores de **CDN** (ex: Cloudflare) espalhados pelo mundo.
+  * **Vantagens:** Reduz drasticamente a latência de rede, encaminhando o usuário para a máquina mais próxima e melhorando a experiência global.
+  * **Trade-off:** Quanto mais próximo o cache está do usuário (e distante da fonte da verdade), maior é a performance, mas **menor é o controle sobre a consistência imediata** na atualização dos arquivos.
+
+</details>
+
+
+
 
