@@ -989,3 +989,15 @@ Pilares da esclabilidade:
   > 💡 **Conclusão:** Se você não consegue enxergar quais são os trade-offs de uma solução ao adotá-la, o ideal é parar, respirar, pesquisar e estudar antes de seguir em frente. Avaliar os prós e os contras de forma consciente garante decisões técnicas muito mais maduras e alinhadas à realidade do seu projeto.
 </details>
 
+
+
+## Ampliando as perspectivas: Introdução
+- [Slides](https://assets.memberkit.com.br/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDIyNzM1MiwicHVyIjoiYmxvYl9pZCJ9fQ==--d443ba30908b6ac70611218bf56f76c393d0f561/2025-06-09%20-%20Slides%20-%20Cap%2011%20-%20Ampliando%20sua%20perspectiva%20-%20Caching.pdf)
+- [Slides local](./pilares-escalabilidade/2025-06-09%20-%20Slides%20-%20Cap%2011%20-%20Ampliando%20sua%20perspectiva%20-%20Caching.pdf)
+
+- Cache: não dá para resumir cache com cache distribuído com redis
+- Processamento assíncrono: processamento assincrono vai além de broker de mensageria
+- balanceamento de cargas: é além do balanceamento de carga
+
+
+
