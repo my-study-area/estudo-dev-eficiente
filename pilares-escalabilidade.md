@@ -1149,3 +1149,250 @@ Outra forma de realizar um cache distribuído é através do Content Delivery Ne
 
 
 
+## Ampliando as perspectivas no uso de Processamento Assíncrono
+- link da apresentação You Keep Using That Word: Asynchronous And Interprocess Comms - Sam Newman - NDC London 2023: https://www.youtube.com/watch?v=6FOCNf06lqY
+
+### Local scheduling: Spring Boot Scheduleder Implementation
+```java
+@Component
+public class OneJob {
+
+    @Scheduled(
+        fixedDelay = 60,
+        timeUnit = TimeUnit.SECONDS
+    )
+    public void runQuiteOften() {
+
+        // job logic goes here
+
+    }
+}
+```
+
+- utilizando regex
+```java
+@Component
+public class AnotherJob {
+
+    @Scheduled(
+      cron = "0 0 9-17 * * MON-FRI"
+    )
+    public void runOnWorkDays() {
+
+        // job logic goes here
+
+    }
+}
+```
+
+- de forma programática
+```java
+@Component
+public class WorkdaysScheduler {
+
+    @Autowired
+    private TaskScheduler scheduler;
+
+    public void schedule(Runnable task) {
+
+        scheduler.schedule(
+            task,
+            new CronTrigger("0 15 9-17 * * MON-FRI")
+        );
+
+    }
+}
+```
+
+
+### Distributed scheduling: JobRunr Distributed Job Scheduleder Implementation
+- Link: https://www.jobrunr.io/en/
+```java
+public class JobRunrExample {
+
+    public static void main(String[] args) {
+
+        HikariConfig config = // configure the connection pool
+        HikariDataSource dataSource = new HikariDataSource(config);
+
+        JobScheduler jobScheduler = JobRunr.configure()
+                .useStorageProvider(
+                        SqlStorageProviderFactory.using(dataSource)
+                )
+                .useDashboard()
+                .initialize()
+                .getJobScheduler();
+
+        jobScheduler.enqueue(() -> {
+            System.out.println("Up & Running from a background Job");
+        });
+    }
+}
+```
+
+
+### Distributed scheduling: Kubernetes CrontJob Implementation
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: process-csv-files
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: process-csv-files
+            image: busybox:1.28
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - ./run-application.sh
+          restartPolicy: OnFailure
+```
+
+### Server Push: Server-sent Events(SSE) Implementation
+- exemplo de polling: pode gerar DDoS e não é escalável
+```html
+<h1>Dashboard | Top10 Sales</h1>
+
+<script>
+  function fetchData() {
+    fetch("/dashboards/top10-sales")
+      .then(response => response.json())
+      .then(data => {
+        // Atualize o dashboard com os dados recebidos
+      })
+  }
+
+  // Agenda execução a cada 15 segundos
+  setInterval(fetchData, 15000);
+</script>
+```
+
+```java
+@GetMapping("/dashboards/top10-sales")
+public List<Sale> top10Sales() {
+    List<Sale> sales = salesRepository.findTop10Sales();
+    return sales;
+}
+```
+- web socket é um canal de duas direções
+- server-sent events: é uma canal de única direção
+```html
+<h1>Dashboard | Top10 Sales</h1>
+
+<script>
+  var eventSource = new EventSource("/dashboards/top10-sales")
+  eventSource.addEventListener("message", (event) => {
+    // update the dashboard
+  })
+</script>
+```
+
+```java
+@GetMapping("/dashboards/top10-sales")
+public Flux<ServerSentEvent<?>> streamEvents() {
+
+    return Flux.interval(Duration.ofSeconds(15))
+        .map(sequence -> {
+
+            List<Sale> sales = salesRepository.findTop10Sales();
+            return ServerSentEvent.builder()
+                .id(String.valueOf(sequence))
+                .event("periodic-event")
+                .data(sales)
+                .build()
+        });
+}
+```
+
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  Aqui está um resumo detalhado e estruturado da aula **"Ampliando as perspectivas no uso de Processamento Assíncrono"**:
+
+  ---
+
+  ## 📌 Visão Geral e Propósito
+
+  O objetivo principal do vídeo é **desmistificar e ampliar a visão sobre o processamento assíncrono**. O instrutor destaca que, no mercado de desenvolvimento, o termo costuma ser associado quase que exclusivamente a *message brokers* (como Kafka ou RabbitMQ), ignorando uma vasta gama de soluções e abstrações assíncronas presentes em diversas camadas da arquitetura de software.
+
+  Citando o especialista **Sam Newman**, o vídeo destaca que **não existe um consenso absoluto** sobre o termo "assíncrono". Por isso, o mais importante é que a equipe de engenharia alinhe internamente o significado do conceito para evitar ruídos de comunicação e tomar decisões arquiteturais mais conscientes.
+
+  ---
+
+  ## 🛠️ Abordagens Práticas e Arquiteturais
+
+  A aula apresenta como a assincronicidade se manifesta em diferentes camadas da aplicação:
+
+  ### 1. Agendamento Local de Tarefas (*Scheduling* na Aplicação)
+
+  * **Conceito:** Execução de rotinas periódicas ou agendadas rodando diretamente na memória do processo da aplicação.
+  * **Exemplo Prático (Spring Boot):**
+  * **Fixo (*Fixed Delay*):** Métodos anotados para rodar a cada intervalo fixo (ex: a cada 60 segundos).
+  * **Flexível (*Cron Expressions*):** Uso de expressões Cron para regras complexas de tempo (ex: rodar apenas em horário comercial, de 1 em 1 hora, de segunda a sexta).
+  * **Programático:** Configuração dinâmica via código (`TaskScheduler`), permitindo ajustar regras de execução conforme parâmetros cadastrados pelo usuário ou vindos do banco de dados.
+
+
+  * **Caso de uso:** Adequado para tarefas simples e locais que não exigem coordenação entre múltiplas instâncias da aplicação.
+
+  ---
+
+  ### 2. Agendadores de Tarefas Distribuídos (*Distributed Background Jobs*)
+
+  * **Conceito:** Quando a aplicação roda em cluster/múltiplas instâncias, o agendamento local pode gerar problemas de *race condition* (duplicidade de execução). Surgem, então, os coordenadores distribuídos.
+  * **Exemplo Prático (JobRunr):**
+  * O agendador registra o job e seus metadados em um armazenamento centralizado (*Storage*), como banco de dados relacionais (PostgreSQL) ou chaves/valor (Redis).
+  * **Workers:** Instâncias da aplicação funcionam como *workers*, observando o armazenamento e executando as tarefas de forma coordenada e sem concorrência.
+
+
+  * **Vantagens:**
+  * Tolerância a falhas e resiliência.
+  * Separação de *workloads* (ex: direcionar tarefas *CPU-bound* para máquinas específicas e *I/O-bound* para outras).
+  * Painéis visuais (*Dashboards*) para monitoramento dos jobs.
+
+
+
+  ---
+
+  ### 3. Agendamento Delegado à Infraestrutura (Kubernetes CronJob)
+
+  * **Conceito:** Transferência da responsabilidade de agendamento e execução para o orquestrador de contêineres/nuvem, aproximando as equipes de Desenvolvimento e Operações (DevOps).
+  * **Exemplo Prático (Kubernetes CronJob):**
+  * Definição via arquivo de configuração YAML.
+  * O Kubernetes cria um Pod/Contêiner temporário baseado em uma imagem (ex: executando um script `.sh` ou uma tarefa de manutenção) no horário especificado (ex: todo dia à meia-noite).
+
+
+  * **Vantagens:** O ciclo de vida da aplicação fica limpo, delegando ao orquestrador a subida, execução, distribuição e destruição do contêiner da tarefa.
+
+  ---
+
+  ### 4. Comunicação Assíncrona no Front-End & Back-End (*Polling* vs. *Server-Sent Events*)
+
+  Ao construir dashboards ou interfaces em tempo real, a escolha do padrão de comunicação impacta diretamente a latência e a escalabilidade da infraestrutura:
+
+  #### A. Polling (Request-Response Tradicional)
+
+  * O cliente faz requisições HTTP periódicas (ex: `fetch` a cada 15 segundos) para perguntar ao servidor se há novos dados.
+  * **Problema:** Em aplicações com milhares de usuários simultâneos, o *polling* gera um efeito colateral similar a um ataque de negação de serviço distribuído (DDoS) voluntário, sobrecarregando o banco e o servidor com requisições repetitivas.
+
+  #### B. Server-Sent Events - SSE (Server Push)
+
+  * Em vez do cliente perguntar repetidamente (*polling*), ou de usar uma conexão bidirecional complexa (*WebSockets*), o cliente usa `EventSource` para abrir um **canal unidirecional**.
+  * **Funcionamento:** O servidor toma a responsabilidade de consultar o banco (ex: usando abordagens reativas com Spring `Flux.interval`) e empurrar (*push*) as atualizações para o browser apenas quando necessário ou no intervalo controlado pelo back-end.
+  * **Benefício:** Reduz drasticamente a carga de requisições no servidor, otimiza o uso de rede e melhora a experiência do usuário (*UX*).
+
+  ---
+
+  ## 💡 Principais Conclusões
+
+  1. **Assincronicidade vai além de Message Brokers:** Threads, Event Loops, chamadas não-bloqueantes, corrotinas, AJAX, `async/await`, agendadores de tarefas e conexões unidirecionais (*SSE*) também são formas legítimas de processamento assíncrono.
+  2. **Importância do Alinhamento de Time:** Definir o que a equipe entende por "assíncrono" previne ruídos de arquitetura.
+  3. **Escolha Consciente da Ferramenta:** Analise a camada (Front-end, Aplicação ou Infraestrutura) e a escalabilidade necessária para escolher a abordagem assíncrona mais simples e eficiente para o problema.
+</details>
+
