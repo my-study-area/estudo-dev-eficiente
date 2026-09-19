@@ -1689,3 +1689,34 @@ select t.*
   * **Benefício:** Elimina completamente o tempo de espera (*Lock Contention*), maximiza a vazão (*throughput*) e mantém a consistência dos dados de forma limpa e nativa.
 </details>
 
+
+
+## Ampliando as perspectivas: Finalizando
+- Cache: não se resume a um cache distribudo como Redis
+- Processamento assíncrono: não se resumo a um broker de mensageria como apache Kafka ou RabbitMQ
+- Balanceamento de carga: não se resume ao Apache ou NGINX
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  O vídeo **"Ampliando as perspectivas: Finalizando"** conclui o capítulo sobre a aplicação dos três pilares fundamentais da performance e escalabilidade em sistemas distribuídos: **cache, processamento assíncrono e balanceamento de carga**.
+
+  ---
+
+  **Conceitos Chave e Aprendizados**
+
+  * **Aplicação em Múltiplos Níveis:** Os pilares de arquitetura não dependem exclusivamente de ferramentas consolidadas de mercado (como Redis para cache, RabbitMQ/Kafka para mensageria ou Nginx/Apache para balanceamento de carga). Eles podem e devem ser aplicados em diversas camadas — do *front-end* e *back-end* à infraestrutura e serviços em nuvem.
+  * **Métricas de Sucesso:** A atenção às diferentes alternativas de implementação busca maximizar o *throughput* (vazão de dados) e minimizar a latência nas comunicações em rede entre sistemas.
+  * **Soluções Sob Medida:** Desenvolvedores não precisam recorrer a ferramentas complexas ou "da moda" para resolver problemas de escala. Antes de adotar novas infraestruturas, vale explorar recursos nativos e locais.
+
+  ---
+
+  **Principais Recursos Internos a Explorar**
+
+  | Recurso / Abordagem | Benefício na Arquitetura |
+  | --- | --- |
+  | **Capacidade Local da Máquina** | Extrai o máximo de desempenho do hardware já disponível. |
+  | **In-Memory Cache** | Reduz chamadas externas armazenando dados diretamente na memória da aplicação. |
+  | **Uso de Threads** | Permite concorrência e processamento paralelo sem necessidade imediata de *brokers* externos. |
+</details>
+
