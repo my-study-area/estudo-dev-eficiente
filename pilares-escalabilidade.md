@@ -1396,3 +1396,296 @@ public Flux<ServerSentEvent<?>> streamEvents() {
   3. **Escolha Consciente da Ferramenta:** Analise a camada (Front-end, Aplicação ou Infraestrutura) e a escalabilidade necessária para escolher a abordagem assíncrona mais simples e eficiente para o problema.
 </details>
 
+
+## Ampliando as perspectivas no uso de Load Balancing (ou melhor, Workload Distribution)
+Melhor ser nomeado como distribuidor de carga
+
+### Parallell processing: Distribuindo a carga entre múltiplas threads
+- ao carregar um arquivo csv, podemos carregar o arquivo em memória, mas em arquivos grandes podemos receber um erro de falta de memória devido ao tamanho do arquivo. Também pode carregar um arquivo grandes em partes para realizar o processamento.
+```java
+@Service
+public class ImportProductsJob {
+
+    @Autowired
+    private ProductProcessor processor;
+    private ExecutorService executor = Executors.newFixedThreadPool(
+            Runtime.getRuntime().availableProcessors() // thread-pool size
+    );
+
+    @Scheduled(fixedDelay = 60_000)
+    public void execute() {
+
+        // read csv file in chunks of 1000 rows
+        Path file = Paths.get("/products-large-file.csv");
+        IndexedCsvReader<CsvRecord> csv = IndexedCsvReader.builder()
+                .pageSize(1000)
+                .ofCsvRecord(file);
+
+        int pageCount = csv.getIndex().getPageCount();
+        List<Future<?>> futures = new ArrayList<>(pageCount);
+
+        // process chunks in parallel
+        IntStream.range(0, pageCount).forEach((pageNumber) -> {
+            List<CsvRecord> records = csv.readPage(pageNumber);
+            futures.add(
+                    this.executor.submit(() -> {
+                        return processor.process(records);
+                    })
+            );
+        });
+
+        // wait for all threads to finish
+        futures.forEach(Future::get); // TODO: error handling
+    }
+}
+```
+Explicação:
+- define o periodo de execução com @Scheduled
+- define o número de threads baseada no número núcleos do processador
+- realiza uma páginação de 1000 do arquivo csv
+- percorre os itens da paginação e executa
+- executa o processamento em paralelo
+- aguarda a finalização de todos no processamento paralelo para finalizar
+
+
+### Sharded Counters: Distribuindo a carga via Slotted Counter Pattern
+```sql
+CREATE TABLE post (
+    id    BIGINT PRIMARY KEY,
+    title TEXT NOT NULL,
+    -- other columns
+);
+
+CREATE TABLE post_likes (
+    post_id BIGINT PRIMARY KEY REFERENCES post(id),
+    counter BIGINT DEFAULT 0 NOT NULL
+);
+```
+
+
+```sql
+UPDATE post_likes
+   SET counter = counter + 1
+ WHERE post_id = 4201
+```
+
+Ao realizar diversos update para registrar a quantidade de likes, pode ocorrer umesgotamento na quantidade de conexões suportada pelo banco de dados
+```sql
+/* connection 1 */
+UPDATE post_likes
+   SET counter = counter + 1
+ WHERE post_id = 4201
+
+/* connection 2 */
+UPDATE post_likes
+   SET counter = counter + 1
+ WHERE post_id = 4201
+
+/* connection 3 */
+UPDATE post_likes
+   SET counter = counter + 1
+ WHERE post_id = 4201
+```
+Ao realizar um conjunto de atualizações podemos sofre um problema de lock contention. Ocorre quando diversos eventos de escrita tentam acessar a mesma tabela
+
+Cada shard adiciona uma quantidade de linhas para cada usuário realizar a sua operação de escrita
+```sql
+CREATE TABLE post_likes (
+    post_id  BIGINT PRIMARY KEY REFERENCES post(id),
+    counter  BIGINT DEFAULT 0 NOT NULL,
+    shard_id SMALLINT NOT NULL
+);
+
+CREATE UNIQUE INDEX post_likes_shards
+    ON post_likes(post_id, shard_id);
+
+UPDATE post_likes
+   SET counter = counter + 1
+ WHERE post_id = 4201
+   AND shard_id = floor(random() * 4)
+
+-- floor(random() * 4) = { 0, 1, 2, 3 }
+```
+Essa técnica de shards é chamada de **slotted counter pattern**
+
+```sql
+SELECT sum(count) as count
+  FROM post_likes
+ WHERE post_id = 4201
+```
+
+
+### Competing Consumers: Distribuindo a carga de uma Queue entre consumidores
+Consumidores que competem
+
+- RabbitMQ
+O padrão Competing Consumers (Consumidores Concorrentes) ocorre quando múltiplos executores (ou workers) leem mensagens da mesma fila de processamento ao mesmo tempo.
+
+Imagine uma fila de guichês num banco: existe apenas uma fila de clientes, mas vários atendentes. O atendente que ficar livre pega o próximo cliente da fila. O objetivo principal é processar muitas tarefas em paralelo de forma simples, garantindo que cada mensagem seja processada por apenas um consumidor.
+
+- Kafka
+Não temos filas, mas temos a mesma ideia de produtores e consumidores. No lado da fila temos um tópico que tem uma partição. Os consumidores não estão concorrendo, mas recebendo o mesmo item porque ele trabalha com o padrão chamado de sigle writter pattern. Para aumentar o número de consumidores, é necessário aumentar a quantidade de partições.
+
+- PostgreSQL
+Um agendamento utilizando Spring:
+```java
+@Component
+public class TasksProcessorJob {
+
+    @Scheduled(fixedDelay = 60_000)
+    public void execute() {
+
+        // processa itens da fila (tabela)
+
+    }
+}
+```
+
+Com uma atualização no banco de dados, processando linha a linha. Em caso de duas máquinas ocorre uma concorrência pela mesma linha:
+```sql
+select t.*
+  from task t
+ where p.status = 'PENDING'
+ order by p.created_at asc
+ limit 1
+```
+
+Podemos utilizar o `for update` com a intenção de realizar um lock. Enquanto uma instânica está processando, outra instânica aguarda a finalização do processamento:
+```sql
+select t.*
+  from task t
+ where p.status = 'PENDING'
+ order by p.created_at asc
+ limit 1
+for update
+```
+
+Com aumento de mais máquinas sofremos o problema de lock contention que atrapalha a escalabilidade e o throughput.
+```sql
+select t.*
+  from task t
+ where t.status = 'PENDING'
+   and mod(t.id, 4) = :machine_id
+ order by t.created_at asc
+ limit 1
+ for update
+```
+Obs: próximo ao round robin. Disputam linhas distintas.
+
+Ainda podemos otimizar com locks por linhas, mas caso aquela linha já esteja sendo processada, a instância pula aquele registro do banco de dados para uma linha que tem menos chance de ser processada.
+
+```sql
+select t.*
+  from task t
+ where t.status = 'PENDING'
+   and mod(t.id, 4) = :machine_id 
+ order by t.created_at asc
+ limit 1
+ for update
+```
+
+Com skip locker ao identificar que uma linha está sendo processada, pula para a próxima linha.
+```sql
+select t.*
+  from task t
+ where t.status = 'PENDING'
+   -- and mod(t.id, 4) = :machine_id 
+ order by t.created_at asc
+ limit 1
+ for update skip locked
+```
+
+<details>
+  <summary>Gerado por IA</summary>
+
+  Aqui está o resumo detalhado do conteúdo apresentado na aula sobre a distribuição de carga através do pilar de **Workload Distribution** (balanceamento de carga) e a aplicação do padrão **Competing Consumers**:
+
+  ---
+
+  ## 1. Recontextualizando o 3º Pilar: Workload Distribution
+
+  Apesar de ser comumente associado apenas a balancidores de carga tradicionais (hardware/software), o terceiro pilar da escalabilidade é mais abrangente e pode ser chamado de **Workload Distribution** (Distribuição de Carga/Trabalho).
+
+  * Ele engloba a escala vertical, escala horizontal, réplicas de leitura/escrita, particionamento de dados (*sharding*) e técnicas aplicadas diretamente na camada de código e backend.
+
+  ---
+
+  ## 2. Processamento Paralelo via Threads (Back-end Level)
+
+  Como distribuir a carga de um processamento pesado na mesma máquina ou processo:
+
+  * **Caso de Uso:** Leitura e importação de um arquivo CSV pesado em background (ex.: `ImportProductJob` no Spring).
+  * **Solução Ineficiente:** Carregar todo o CSV em memória e processar linha a linha sequencialmente (risco de *Out of Memory* e baixa vazão).
+  * **Solução Eficiente:**
+  1. **Carregamento Incremental e Paginação:** Ler o arquivo por demanda (usando libs como *FastCSV*) e criar páginas/lotes de dados (ex.: 1.000 linhas por página).
+  2. **Thread Pool:** Submeter o processamento de cada página paralelamente utilizando o `ExecutorService` e um pool de threads.
+
+
+  * **Atenção ao Tamanho do Thread Pool:**
+  * **Problema:** Aumentar excessivamente o número de threads acima da capacidade de hardware causa concorrência por tempo de CPU (*Lock Contention* e alto *Context Switch*), piorando a performance.
+  * **Aplicações CPU-Bound:** O número ideal de threads deve ser próximo ao número de *cores* da CPU (`Runtime.getRuntime().availableProcessors()`).
+  * **Aplicações I/O-Bound:** É possível usar múltiplos do número de cores (ex.: $2 \times \text{cores}$), já que as threads passam tempo aguardando respostas do disco ou rede.
+  * **Coleta de Resultados:** Armazenar os retornos em objetos `Future` para sincronizar e aguardar a conclusão de todas as páginas antes de finalizar o job.
+
+
+
+  ---
+
+  ## 3. Padrão Slotted Counter (Sharded Counters)
+
+  Como distribuir a carga para evitar gargalos em contadores de alto tráfego no banco de dados relational:
+
+  * **O Problema de Concorrência (*Lock Contention*):**
+  * Em cenários como redes sociais (ex.: likes em fotos), se milhares de usuários clicam em "curtir" simultaneamente, uma única linha do banco (`post_likes`) recebe múltiplos comandos `UPDATE` simultâneos.
+  * O banco precisa adquirir um **Lock Exclusivo** na linha e serializar as requisições. Isso causa **Lock Contention** (contenção de locks), que limita a escalabilidade e derruba a latência/throughput.
+
+
+  * **A Solução via Slotted Counter / Sharded Counter:**
+  * Em vez de manter **uma** linha de contador para o post, cria-se **múltiplas linhas** associadas ao mesmo post, diferenciadas por uma coluna chamada `shard_id` (ex.: de 0 a 3).
+  * Quando um usuário dá *like*, o sistema sorteia aleatoriamente um `shard_id` (`FLOOR(RAND() * N)`).
+  * **Resultado:** Os updates são distribuídos dinamicamente entre linhas distintas, reduzindo dramaticamente a disputa de lock entre as conexões.
+  * **Trade-off:** Para consultar o total de likes, é necessário realizar uma agregação (`SUM(counter) WHERE post_id = X`).
+
+
+
+  ---
+
+  ## 4. Padrão Competing Consumers (Consumidores Concorrentes)
+
+  O padrão visa escalar o consumo de dados distribuindo os itens de uma fila/tópico entre múltiplos trabalhadores concorrentes.
+
+  ### A. Em Brokers de Mensageria Convencionais (ex.: RabbitMQ)
+
+  * **Mecanismo:** Uma fila acumula as mensagens.
+  * **Escala:** Para aumentar o *throughput* (vazão de mensagens), basta adicionar novos *consumers* (threads ou novos nós da aplicação) escutando a mesma fila. O próprio broker distribui as mensagens exclusivamente entre eles.
+
+  ### B. Em Plataformas de Streaming (ex.: Apache Kafka)
+
+  * **Estrutura:** O Kafka não utiliza filas tradicionais, mas sim **Tópicos** divididos em **Partições**.
+  * **Single Writer Pattern:** Para garantir máxima vazão e integridade sem *locks*, **uma partição só pode ser consumida por um único consumidor dentro de um mesmo *Consumer Group***.
+  * **Escala no Kafka:**
+  * A unidade de paralelismo do Kafka é a **Partição**.
+  * Não adianta adicionar mais consumidores a um *Consumer Group* do que o número de partições disponíveis no tópico (os excedentes ficarão ociosos).
+  * Para aplicar *Competing Consumers* e escalar a vazão no Kafka, é necessário **aumentar o número de partições** no tópico e garantir que os produtores distribuam bem as mensagens entre elas (ex.: via chave de particionamento).
+
+
+
+  ### C. Em Bancos de Dados Relacionais (Processamento de Tarefas em Tabela)
+
+  Ao utilizar uma tabela como fila de tarefas pendentes em um cluster de aplicações:
+
+  1. **Abordagem Básica com `FOR UPDATE`:**
+  * Evita que duas máquinas processem a mesma tarefa, mas força uma máquina a esperar a outra liberar o lock da linha, caindo novamente em *Lock Contention*.
+
+
+  2. **Abordagem com Divisão por Módulo (`MOD` / Round-Robin):**
+  * Filtrar o ID da tarefa com base no ID da máquina usando módulo: `WHERE MOD(id, total_maquinas) = machine_id`.
+  * Cada nó processa uma fatia diferente da tabela, reduzindo a disputa.
+
+
+  3. **Solução Nativa Ideal (`FOR UPDATE SKIP LOCKED`):**
+  * Funcionalidade suportada por bancos modernos (como PostgreSQL, MySQL 8+ e Oracle).
+  * O comando instrui o banco a selecionar a linha e, caso ela já esteja travada por outro processo/transação, **pular instantaneamente para a próxima linha disponível**.
+  * **Benefício:** Elimina completamente o tempo de espera (*Lock Contention*), maximiza a vazão (*throughput*) e mantém a consistência dos dados de forma limpa e nativa.
+</details>
+
