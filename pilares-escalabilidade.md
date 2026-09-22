@@ -1720,3 +1720,23 @@ select t.*
   | **Uso de Threads** | Permite concorrência e processamento paralelo sem necessidade imediata de *brokers* externos. |
 </details>
 
+
+## Concluindo e muito obrigado
+- Documentos extras: 
+  - [link web](https://assets.memberkit.com.br/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDIyNzM0OSwicHVyIjoiYmxvYl9pZCJ9fQ==--9aa97fc51c103cfa6ab1ee864665b29cd00317d0/2025-06-09%20-%20Slides%20-%20Cap%2014%20-%20Finalizando.pdf)
+  - [link local](./pilares-escalabilidade/2025-06-09-Slides-Cap14-Finalizando.pdf)
+
+- perf (latency) vs scale (Throughput)
+- monolito vs microservices
+- 8 falacias (mentiras) da computação distribuida
+- arquitetura é sobre contextos, requisitos e restrições. Contextos
+  - enterprise
+  - startup
+  - big Tech
+- abaixar a latency
+- aumentar o throughput
+- diminuir e evitar a coordenação
+- Pilares da escalabilidade:
+  - cache
+  - processamento assíncrono
+  - balanceamento de carga
