@@ -81,7 +81,7 @@ estudo-dev-eficiente
 
 ### Curso: Pilares da Escalabilidade: Os 3 pilares para escalar sistemas distribuídos
 - [Pilares da Escalabilidade: Os 3 pilares para escalar sistemas distribuídos](./pilares-escalabilidade.md)
-- [Certificado](./)
+- [Certificado](https://plataforma.contrateumdeveficiente.com/certificados/cd707761-d465-4ea4-8daa-4deb697f4f0d.pdf)
 
 ## Desafios
 - [desafio-1: Casa do código](https://github.com/forks-projects/seed-desafio-cdc)
